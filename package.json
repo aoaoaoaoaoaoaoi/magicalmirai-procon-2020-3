@@ -1,0 +1,26 @@
+{
+  "name": "3",
+  "version": "1.0.0",
+  "description": "\"# magicalmirai-procon-2020-3\"",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html --out-dir dist",
+    "build": "parcel build index.html --out-dir dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aoaoaoaoaoaoaoi/magicalmirai-procon-2020-3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aoaoaoaoaoaoaoi/magicalmirai-procon-2020-3/issues"
+  },
+  "homepage": "https://github.com/aoaoaoaoaoaoaoi/magicalmirai-procon-2020-3#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "textalive-app-api": "^0.1.2"
+  }
+}
