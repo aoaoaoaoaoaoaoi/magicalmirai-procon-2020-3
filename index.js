@@ -40,7 +40,7 @@ const run = () =>{
     // これ以降、requestPlay()等が実行可能
     onTimerReady: () => {
       console.log('TimerReady');
-      $('#text').html('[再生開始]');
+      $('#text').html('');
       player.requestPlay();
       // 定期的に呼ばれる各単語の "animate" 関数をセットする
       /*let w = player.video.firstPhrase;
@@ -60,13 +60,15 @@ const run = () =>{
       let current = c || player.video.firstPhrase;
       while (current && current.startTime < position + 500) {
         if (c !== current) {
+          const div = document.createElement("div");
             let str = current.text;
             let charArray = str.split('');
             for(var i = 0; i < charArray.length; ++i){
               const span = document.createElement("span");
               span.innerHTML = charArray[i];
-              $('#text').append(span);
+              div.appendChild(span);
             }
+            $('#text').append(div);
           c = current;
         }
         current = current.next;
