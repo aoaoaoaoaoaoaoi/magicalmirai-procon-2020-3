@@ -16,6 +16,8 @@ const run = () =>{
 
   const player = new Player({ app: true , mediaElement: document.querySelector('#media')});
   console.log('Run');
+
+  let c;
   player.addListener({
     onAppReady: (app) => {
       console.log('AppReady');
@@ -41,12 +43,30 @@ const run = () =>{
       $('#text').html('[再生開始]');
       player.requestPlay();
       // 定期的に呼ばれる各単語の "animate" 関数をセットする
-      let w = player.video.firstWord;
+      /*let w = player.video.firstPhrase;
       while (w) {
         w.animate = animateWord;
         w = w.next;
+      }*/
+    },
+
+    onTimeUpdate: (position) => {
+      // 歌詞情報がなければこれで処理を終わる
+      if (!player.video.firstChar) {
+        return;
+      }
+  
+      // 500ms先から始まる文字～フレーズの最後まで取得
+      let current = c || player.video.firstPhrase;
+      while (current && current.startTime < position + 500) {
+        if (c !== current) {
+            $('#text').html(current.text);
+          c = current;
+        }
+        current = current.next;
       }
     },
+  
   });
 }
 

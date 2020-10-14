@@ -137,6 +137,7 @@ var run = function run() {
     mediaElement: document.querySelector('#media')
   });
   console.log('Run');
+  var c;
   player.addListener({
     onAppReady: function onAppReady(app) {
       console.log('AppReady');
@@ -160,11 +161,28 @@ var run = function run() {
       $('#text').html('[再生開始]');
       player.requestPlay(); // 定期的に呼ばれる各単語の "animate" 関数をセットする
 
-      var w = player.video.firstWord;
-
+      /*let w = player.video.firstPhrase;
       while (w) {
         w.animate = animateWord;
         w = w.next;
+      }*/
+    },
+    onTimeUpdate: function onTimeUpdate(position) {
+      // 歌詞情報がなければこれで処理を終わる
+      if (!player.video.firstChar) {
+        return;
+      } // 500ms先から始まる文字～フレーズの最後まで取得
+
+
+      var current = c || player.video.firstPhrase;
+
+      while (current && current.startTime < position + 500) {
+        if (c !== current) {
+          $('#text').html(current.text);
+          c = current;
+        }
+
+        current = current.next;
       }
     }
   });
@@ -199,7 +217,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55909" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49625" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
