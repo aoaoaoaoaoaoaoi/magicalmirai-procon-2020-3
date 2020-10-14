@@ -60,7 +60,13 @@ const run = () =>{
       let current = c || player.video.firstPhrase;
       while (current && current.startTime < position + 500) {
         if (c !== current) {
-            $('#text').html(current.text);
+            let str = current.text;
+            let charArray = str.split('');
+            for(var i = 0; i < charArray.length; ++i){
+              const span = document.createElement("span");
+              span.innerHTML = charArray[i];
+              $('#text').append(span);
+            }
           c = current;
         }
         current = current.next;

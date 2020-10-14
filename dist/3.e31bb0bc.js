@@ -178,7 +178,15 @@ var run = function run() {
 
       while (current && current.startTime < position + 500) {
         if (c !== current) {
-          $('#text').html(current.text);
+          var str = current.text;
+          var charArray = str.split('');
+
+          for (var i = 0; i < charArray.length; ++i) {
+            var span = document.createElement("span");
+            span.innerHTML = charArray[i];
+            $('#text').append(span);
+          }
+
           c = current;
         }
 

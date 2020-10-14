@@ -4,3 +4,20 @@
     background-color: black;
     color:white;
 }
+
+#text{
+    transform: rotateX(10deg) rotateY(-20deg);
+}
+
+/*span:nth-child(1){  transform: translate(-50%,-50%) rotate(0deg)   translateY(-300px) rotateX(90deg); }
+span:nth-child(2){  transform: translate(-50%,-50%) rotate(30deg)  translateY(-300px) rotateX(90deg); }
+span:nth-child(3){  transform: translate(-50%,-50%) rotate(60deg)  translateY(-300px) rotateX(90deg); }
+span:nth-child(4){  transform: translate(-50%,-50%) rotate(90deg)  translateY(-300px) rotateX(90deg); }
+span:nth-child(5){  transform: translate(-50%,-50%) rotate(120deg) translateY(-300px) rotateX(90deg); }
+span:nth-child(6){  transform: translate(-50%,-50%) rotate(150deg) translateY(-300px) rotateX(90deg); }
+span:nth-child(7){  transform: translate(-50%,-50%) rotate(180deg) translateY(-300px) rotateX(90deg); }
+span:nth-child(8){  transform: translate(-50%,-50%) rotate(210deg) translateY(-300px) rotateX(90deg); }
+span:nth-child(9){  transform: translate(-50%,-50%) rotate(240deg) translateY(-300px) rotateX(90deg); }
+span:nth-child(10){ transform: translate(-50%,-50%) rotate(270deg) translateY(-300px) rotateX(90deg); }
+span:nth-child(11){ transform: translate(-50%,-50%) rotate(300deg) translateY(-300px) rotateX(90deg); }
+span:nth-child(12){ transform: translate(-50%,-50%) rotate(330deg) translateY(-300px) rotateX(90deg); }*/
