@@ -6,7 +6,7 @@
 }
 
 #text{
-    transform: translateY(400px) rotateX(15deg) rotateY(-15deg);
+    transform: rotateX(15deg) rotateY(-15deg);
 }
 
 span{

@@ -120,7 +120,9 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"index.js":[function(require,module,exports) {
 var _TextAliveApp = TextAliveApp,
     Player = _TextAliveApp.Player;
-var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU'; // 単語ごとに歌詞を表示
+var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
+var isAnimation = false;
+var lyricDivArray = []; // 単語ごとに歌詞を表示
 
 var animateWord = function animateWord(now, unit) {
   if (unit.contains(now)) {
@@ -138,6 +140,7 @@ var run = function run() {
   });
   console.log('Run');
   var c;
+  var lyricId = 1;
   player.addListener({
     onAppReady: function onAppReady(app) {
       console.log('AppReady');
@@ -180,6 +183,11 @@ var run = function run() {
       while (current && current.startTime < position + 500) {
         if (c !== current) {
           var div = document.createElement("div");
+          lyricDivArray.push(div);
+          div.id = "lyric_" + lyricId;
+          lyricId++;
+          div.style.position = 'absolute';
+          div.style.top = 510 + "px";
           var str = current.text;
           var charArray = str.split('');
 
@@ -195,10 +203,29 @@ var run = function run() {
           c = current;
         }
 
+        if (!isAnimation) {
+          isAnimation = true;
+          setAnimation();
+        }
+
         current = current.next;
       }
     }
   });
+};
+
+var setAnimation = function setAnimation() {
+  var delay = 1000 / 50; // 1 秒で 50 フレーム
+
+  var timer = setInterval(function () {
+    //500ms
+    var move = 8;
+    lyricDivArray.forEach(function (item, index) {
+      var currentPos = parseInt(item.style.top);
+      var newPos = currentPos - move;
+      item.style.top = newPos + "px";
+    });
+  }, delay);
 };
 
 window.run = run;

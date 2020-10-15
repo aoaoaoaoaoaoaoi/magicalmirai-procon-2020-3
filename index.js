@@ -1,6 +1,8 @@
 const { Player } = TextAliveApp;
 
 let songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
+let isAnimation = false;
+let lyricDivArray = [];
 
 // 単語ごとに歌詞を表示
 const animateWord = (now, unit) => {
@@ -18,6 +20,7 @@ const run = () =>{
   console.log('Run');
 
   let c;
+  let lyricId = 1;
   player.addListener({
     onAppReady: (app) => {
       console.log('AppReady');
@@ -62,6 +65,11 @@ const run = () =>{
       while (current && current.startTime < position + 500) {
         if (c !== current) {
           const div = document.createElement("div");
+          lyricDivArray.push(div);
+          div.id = "lyric_" + lyricId;
+          lyricId++;
+          div.style.position = 'absolute';
+          div.style.top = 510 + "px";
             let str = current.text;
             let charArray = str.split('');
             for(var i = 0; i < charArray.length; ++i){
@@ -74,11 +82,28 @@ const run = () =>{
             $('#text').append(div);
           c = current;
         }
+        if(!isAnimation){
+          isAnimation = true;
+          setAnimation();
+        }
         current = current.next;
       }
     },
   
   });
 }
+
+const setAnimation = () =>{
+  let delay = 1000 / 50; // 1 秒で 50 フレーム
+  let timer = setInterval(function() {
+  //500ms
+  let move = 8;
+  lyricDivArray.forEach((item, index) => {
+    let currentPos = parseInt(item.style.top);
+    let newPos = (currentPos - move);
+    item.style.top = newPos + "px";
+  });
+}, delay)
+};
 
 window.run = run
