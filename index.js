@@ -58,6 +58,7 @@ const run = () =>{
   
       // 500ms先から始まる文字～フレーズの最後まで取得
       let current = c || player.video.firstPhrase;
+      let fontSize = 50;
       while (current && current.startTime < position + 500) {
         if (c !== current) {
           const div = document.createElement("div");
@@ -65,8 +66,10 @@ const run = () =>{
             let charArray = str.split('');
             for(var i = 0; i < charArray.length; ++i){
               const span = document.createElement("span");
+              span.style.fontSize = fontSize + "px";
               span.innerHTML = charArray[i];
               div.appendChild(span);
+              fontSize -= 1;
             }
             $('#text').append(div);
           c = current;

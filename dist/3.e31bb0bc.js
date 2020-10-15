@@ -175,6 +175,7 @@ var run = function run() {
 
 
       var current = c || player.video.firstPhrase;
+      var fontSize = 50;
 
       while (current && current.startTime < position + 500) {
         if (c !== current) {
@@ -184,8 +185,10 @@ var run = function run() {
 
           for (var i = 0; i < charArray.length; ++i) {
             var span = document.createElement("span");
+            span.style.fontSize = fontSize + "px";
             span.innerHTML = charArray[i];
             div.appendChild(span);
+            fontSize -= 1;
           }
 
           $('#text').append(div);
@@ -227,7 +230,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49625" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65131" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
