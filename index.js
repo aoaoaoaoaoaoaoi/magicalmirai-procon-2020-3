@@ -5,6 +5,7 @@ let isAnimation = false;
 let phraseDivArray = [];
 let wordsArray = [];
 let lyricDivArray = [];
+let currentPosition = 0;
 
 // 単語ごとに歌詞を表示
 const animateWord = (now, unit) => {
@@ -60,7 +61,8 @@ const run = () =>{
       if (!player.video.firstChar) {
         return;
       }
-  
+      currentPosition = position;
+      setMakeWords();
       // 500ms先から始まる文字～フレーズの最後まで取得
       let current = c || player.video.firstPhrase;
       while (current && current.startTime < position + 500) {
@@ -70,19 +72,7 @@ const run = () =>{
           $('#text').append(phraseDiv);
           let words = current.children;
           wordsArray.concat(words);
-          for(var j = 0; j < words.length; ++j){
-            if(words[j].startTime < position + 500){
-
-            }
-            
-            //lyricDivArray.push(div);
-            //div.id = "lyric_" + lyricId;
-            //lyricId++;
-            //div.style.position = 'absolute';
-            //div.style.top = 510 + "px";
-
-            phraseDiv.appendChild(wordDiv);
-          }
+          Array.prototype.push.apply(wordsArray, words);
           c = current;
         }
         if(!isAnimation){
@@ -101,18 +91,19 @@ const setMakeWords = () =>{
   let timer = setInterval(function() {
     let copy = wordsArray;
     copy.forEach((item, index) => {
-      if(item.startTime < position + 500){
+      if(item.startTime < currentPosition + 500){
         const wordDiv = document.createElement("div");
-        let targetWord = wordsArray.shift();
-        let str = targetWord.text;
-        let charArray = str.split('');
-        for(var i = 0; i < charArray.length; ++i){
+        let word = wordsArray.shift();
+        let charas = word.children;
+        for(var i = 0; i < charas.length; ++i){
           const span = document.createElement("span");
-          span.innerHTML = charArray[i];
+          span.innerHTML = charas[i].text;
           wordDiv.appendChild(span);
         }
         phraseDivArray[0].appendChild(wordDiv);
-        if(targetWord.parent.parent.lastChar)
+        if(word.parent.lastWord == word){
+          phraseDivArray.shift();
+        }
       }
   });
 }, delay)

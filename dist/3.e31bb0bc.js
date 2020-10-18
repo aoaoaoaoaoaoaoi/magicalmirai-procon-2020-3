@@ -122,7 +122,10 @@ var _TextAliveApp = TextAliveApp,
     Player = _TextAliveApp.Player;
 var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 var isAnimation = false;
-var lyricDivArray = []; // 単語ごとに歌詞を表示
+var phraseDivArray = [];
+var wordsArray = [];
+var lyricDivArray = [];
+var currentPosition = 0; // 単語ごとに歌詞を表示
 
 var animateWord = function animateWord(now, unit) {
   if (unit.contains(now)) {
@@ -175,38 +178,21 @@ var run = function run() {
       // 歌詞情報がなければこれで処理を終わる
       if (!player.video.firstChar) {
         return;
-      } // 500ms先から始まる文字～フレーズの最後まで取得
+      }
 
+      currentPosition = position;
+      setMakeWords(); // 500ms先から始まる文字～フレーズの最後まで取得
 
       var current = c || player.video.firstPhrase;
 
       while (current && current.startTime < position + 500) {
         if (c !== current) {
           var phraseDiv = document.createElement("div");
+          phraseDivArray.push(phraseDiv);
           $('#text').append(phraseDiv);
           var words = current.children;
-
-          for (var j = 0; j < words.length; ++j) {
-            var wordDiv = document.createElement("div"); //lyricDivArray.push(div);
-            //div.id = "lyric_" + lyricId;
-            //lyricId++;
-            //div.style.position = 'absolute';
-            //div.style.top = 510 + "px";
-
-            var str = words[j].text;
-            console.log(str);
-            var charArray = str.split('');
-
-            for (var i = 0; i < charArray.length; ++i) {
-              var span = document.createElement("span"); //span.style.fontSize = fontSize + "px";
-
-              span.innerHTML = charArray[i];
-              wordDiv.appendChild(span); //fontSize -= 1;
-            }
-
-            phraseDiv.appendChild(wordDiv);
-          }
-
+          wordsArray.concat(words);
+          Array.prototype.push.apply(wordsArray, words);
           c = current;
         }
 
@@ -218,6 +204,33 @@ var run = function run() {
       }
     }
   });
+};
+
+var setMakeWords = function setMakeWords() {
+  var delay = 1000 / 50; // 1 秒で 50 フレーム
+
+  var timer = setInterval(function () {
+    var copy = wordsArray;
+    copy.forEach(function (item, index) {
+      if (item.startTime < currentPosition + 500) {
+        var wordDiv = document.createElement("div");
+        var word = wordsArray.shift();
+        var charas = word.children;
+
+        for (var i = 0; i < charas.length; ++i) {
+          var span = document.createElement("span");
+          span.innerHTML = charas[i].text;
+          wordDiv.appendChild(span);
+        }
+
+        phraseDivArray[0].appendChild(wordDiv);
+
+        if (word.parent.lastWord == word) {
+          phraseDivArray.shift();
+        }
+      }
+    });
+  }, delay);
 };
 
 var setAnimation = function setAnimation() {
@@ -263,7 +276,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49578" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49646" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
