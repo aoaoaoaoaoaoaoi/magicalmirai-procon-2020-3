@@ -151,10 +151,11 @@ var run = function run() {
     onVideoReady: function onVideoReady(v) {
       console.log('VideoReady');
       var infoContents = '';
-      infoContents += '<h1>楽曲情報</h1>';
+      /*infoContents += '<h1>楽曲情報</h1>';
       infoContents += '<h2>楽曲名：<br>' + player.data.song.name + '</h2>';
       infoContents += '<h2>アーティスト名：<br>' + player.data.song.artist.name + '</h2>';
-      $('#info').html(infoContents);
+      $('#info').html(infoContents);*/
+
       $('#text').html('[再生準備待機中]');
     },
     // 再生準備完了後、呼ばれる
@@ -257,7 +258,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65131" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49578" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

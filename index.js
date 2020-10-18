@@ -32,10 +32,10 @@ const run = () =>{
     onVideoReady: (v) => {
       console.log('VideoReady');
       let infoContents = '';
-      infoContents += '<h1>楽曲情報</h1>';
+      /*infoContents += '<h1>楽曲情報</h1>';
       infoContents += '<h2>楽曲名：<br>' + player.data.song.name + '</h2>';
       infoContents += '<h2>アーティスト名：<br>' + player.data.song.artist.name + '</h2>';
-      $('#info').html(infoContents);
+      $('#info').html(infoContents);*/
       $('#text').html('[再生準備待機中]');
     },
 
