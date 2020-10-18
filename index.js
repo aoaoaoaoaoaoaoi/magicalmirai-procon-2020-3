@@ -2,6 +2,8 @@ const { Player } = TextAliveApp;
 
 let songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 let isAnimation = false;
+let phraseDivArray = [];
+let wordsArray = [];
 let lyricDivArray = [];
 
 // 単語ごとに歌詞を表示
@@ -61,30 +63,31 @@ const run = () =>{
   
       // 500ms先から始まる文字～フレーズの最後まで取得
       let current = c || player.video.firstPhrase;
-      let fontSize = 50;
       while (current && current.startTime < position + 500) {
         if (c !== current) {
-          const div = document.createElement("div");
-          lyricDivArray.push(div);
-          div.id = "lyric_" + lyricId;
-          lyricId++;
-          div.style.position = 'absolute';
-          div.style.top = 510 + "px";
-            let str = current.text;
-            let charArray = str.split('');
-            for(var i = 0; i < charArray.length; ++i){
-              const span = document.createElement("span");
-              span.style.fontSize = fontSize + "px";
-              span.innerHTML = charArray[i];
-              div.appendChild(span);
-              fontSize -= 1;
+          const phraseDiv = document.createElement("div");
+          phraseDivArray.push(phraseDiv);
+          $('#text').append(phraseDiv);
+          let words = current.children;
+          wordsArray.concat(words);
+          for(var j = 0; j < words.length; ++j){
+            if(words[j].startTime < position + 500){
+
             }
-            $('#text').append(div);
+            
+            //lyricDivArray.push(div);
+            //div.id = "lyric_" + lyricId;
+            //lyricId++;
+            //div.style.position = 'absolute';
+            //div.style.top = 510 + "px";
+
+            phraseDiv.appendChild(wordDiv);
+          }
           c = current;
         }
         if(!isAnimation){
           isAnimation = true;
-          setAnimation();
+          //setAnimation();
         }
         current = current.next;
       }
@@ -92,6 +95,28 @@ const run = () =>{
   
   });
 }
+
+const setMakeWords = () =>{
+  let delay = 1000 / 50; // 1 秒で 50 フレーム
+  let timer = setInterval(function() {
+    let copy = wordsArray;
+    copy.forEach((item, index) => {
+      if(item.startTime < position + 500){
+        const wordDiv = document.createElement("div");
+        let targetWord = wordsArray.shift();
+        let str = targetWord.text;
+        let charArray = str.split('');
+        for(var i = 0; i < charArray.length; ++i){
+          const span = document.createElement("span");
+          span.innerHTML = charArray[i];
+          wordDiv.appendChild(span);
+        }
+        phraseDivArray[0].appendChild(wordDiv);
+        if(targetWord.parent.parent.lastChar)
+      }
+  });
+}, delay)
+};
 
 const setAnimation = () =>{
   let delay = 1000 / 50; // 1 秒で 50 フレーム

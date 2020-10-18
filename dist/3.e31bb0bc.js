@@ -179,34 +179,39 @@ var run = function run() {
 
 
       var current = c || player.video.firstPhrase;
-      var fontSize = 50;
 
       while (current && current.startTime < position + 500) {
         if (c !== current) {
-          var div = document.createElement("div");
-          lyricDivArray.push(div);
-          div.id = "lyric_" + lyricId;
-          lyricId++;
-          div.style.position = 'absolute';
-          div.style.top = 510 + "px";
-          var str = current.text;
-          var charArray = str.split('');
+          var phraseDiv = document.createElement("div");
+          $('#text').append(phraseDiv);
+          var words = current.children;
 
-          for (var i = 0; i < charArray.length; ++i) {
-            var span = document.createElement("span");
-            span.style.fontSize = fontSize + "px";
-            span.innerHTML = charArray[i];
-            div.appendChild(span);
-            fontSize -= 1;
+          for (var j = 0; j < words.length; ++j) {
+            var wordDiv = document.createElement("div"); //lyricDivArray.push(div);
+            //div.id = "lyric_" + lyricId;
+            //lyricId++;
+            //div.style.position = 'absolute';
+            //div.style.top = 510 + "px";
+
+            var str = words[j].text;
+            console.log(str);
+            var charArray = str.split('');
+
+            for (var i = 0; i < charArray.length; ++i) {
+              var span = document.createElement("span"); //span.style.fontSize = fontSize + "px";
+
+              span.innerHTML = charArray[i];
+              wordDiv.appendChild(span); //fontSize -= 1;
+            }
+
+            phraseDiv.appendChild(wordDiv);
           }
 
-          $('#text').append(div);
           c = current;
         }
 
         if (!isAnimation) {
-          isAnimation = true;
-          setAnimation();
+          isAnimation = true; //setAnimation();
         }
 
         current = current.next;
