@@ -25,11 +25,13 @@ body{
     animation: showLyrics 0.1s ease-out forwards;
     display: inline-block;
     font-size: 50px;
+
+    /*animation: moveLyrics 10s 0.5s infinite;*/
 }
 
 span{
-    display:inline-block;
-    text-shadow    : 
+    display: inline-block;
+    text-shadow: 
     2px  2px 1px #003366,
    -2px  2px 1px #003366,
     2px -2px 1px #003366,
@@ -42,7 +44,7 @@ span{
 
 @keyframes showLyrics {
     0% {
-        transform: translate3d(100%, 100%, 0);
+        transform: translate3d(100%, 100%, 100%);
       }
       100% {
         transform: translate3d(0, 0, 0);
@@ -52,5 +54,14 @@ span{
     }
     100% {
       font-size: 50px;
-    }*/
+    } */  
+  }
+
+  @keyframes moveLyrics {
+    0% {
+        transform: rotateZ(0,0,0,0);
+    }
+    100% {
+        transform: rotate3d(360, 360, 360, 360);
+    }
   }
