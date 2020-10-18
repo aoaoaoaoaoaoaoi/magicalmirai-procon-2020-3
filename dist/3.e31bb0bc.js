@@ -123,8 +123,9 @@ var _TextAliveApp = TextAliveApp,
 var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 var isAnimation = false;
 var phraseDivArray = [];
+var phraseArray = [];
+var phraseDivArrayForDelete = [];
 var wordsArray = [];
-var lyricDivArray = [];
 var currentPosition = 0; // 単語ごとに歌詞を表示
 
 var animateWord = function animateWord(now, unit) {
@@ -181,23 +182,27 @@ var run = function run() {
       }
 
       currentPosition = position;
-      setMakeWords(); // 500ms先から始まる文字～フレーズの最後まで取得
+
+      if (!isAnimation) {
+        isAnimation = true;
+        update();
+      } // 500ms先から始まる文字～フレーズの最後まで取得
+
 
       var current = c || player.video.firstPhrase;
 
       while (current && current.startTime < position + 500) {
         if (c !== current) {
+          phraseArray.push(current);
           var phraseDiv = document.createElement("div");
+          phraseDiv.style.position = "absolute";
+          phraseDiv.style.top = "0px";
           phraseDivArray.push(phraseDiv);
+          phraseDivArrayForDelete.push(phraseDiv);
           $('#text').append(phraseDiv);
           var words = current.children;
-          wordsArray.concat(words);
           Array.prototype.push.apply(wordsArray, words);
           c = current;
-        }
-
-        if (!isAnimation) {
-          isAnimation = true; //setAnimation();
         }
 
         current = current.next;
@@ -206,45 +211,56 @@ var run = function run() {
   });
 };
 
-var setMakeWords = function setMakeWords() {
+var update = function update() {
   var delay = 1000 / 50; // 1 秒で 50 フレーム
 
   var timer = setInterval(function () {
-    var copy = wordsArray;
-    copy.forEach(function (item, index) {
-      if (item.startTime < currentPosition + 500) {
-        var wordDiv = document.createElement("div");
-        var word = wordsArray.shift();
-        var charas = word.children;
-
-        for (var i = 0; i < charas.length; ++i) {
-          var span = document.createElement("span");
-          span.innerHTML = charas[i].text;
-          wordDiv.appendChild(span);
-        }
-
-        phraseDivArray[0].appendChild(wordDiv);
-
-        if (word.parent.lastWord == word) {
-          phraseDivArray.shift();
-        }
-      }
-    });
+    setMakeWords();
+    setDeletePhrase();
   }, delay);
 };
 
-var setAnimation = function setAnimation() {
-  var delay = 1000 / 50; // 1 秒で 50 フレーム
+var setMakeWords = function setMakeWords() {
+  var copy = wordsArray;
+  copy.forEach(function (item, index) {
+    if (item.startTime < currentPosition + 500) {
+      var wordDiv = document.createElement("div");
+      var word = wordsArray.shift();
+      var charas = word.children;
 
-  var timer = setInterval(function () {
-    //500ms
-    var move = 8;
-    lyricDivArray.forEach(function (item, index) {
-      var currentPos = parseInt(item.style.top);
+      for (var i = 0; i < charas.length; ++i) {
+        var span = document.createElement("span");
+        span.innerHTML = charas[i].text;
+        wordDiv.appendChild(span);
+      }
+
+      phraseDivArray[0].appendChild(wordDiv);
+
+      if (word.parent.lastWord == word) {
+        phraseDivArray.shift();
+      }
+    }
+  });
+};
+
+var setDeletePhrase = function setDeletePhrase() {
+  //500ms
+  var move = 8;
+  var copy = phraseArray;
+  copy.forEach(function (item, index) {
+    if (item.endTime < currentPosition) {
+      var phraseDiv = phraseDivArrayForDelete[index];
+      var currentPos = parseInt(phraseDiv.style.top);
       var newPos = currentPos - move;
-      item.style.top = newPos + "px";
-    });
-  }, delay);
+      phraseDiv.style.top = newPos + "px";
+
+      if (parseInt(phraseDiv.style.top) < -1000) {
+        //削除
+        phraseArray.splice(index, 1);
+        phraseDivArrayForDelete.splice(index, 1);
+      }
+    }
+  });
 };
 
 window.run = run;
