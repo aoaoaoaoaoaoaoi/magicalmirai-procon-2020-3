@@ -118,6 +118,8 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"index.js":[function(require,module,exports) {
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _TextAliveApp = TextAliveApp,
     Player = _TextAliveApp.Player;
 var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
@@ -257,13 +259,23 @@ var setDeletePhrase = function setDeletePhrase() {
       phraseDiv.style.top = newPos + "px";
 
       if (!isPhraseDivRegisterDeleteArray[index]) {
-        phraseDiv.animate({
+        //phraseDiv.classList.add('fadeLyric');
+
+        /*phraseDiv.animate({
           opacity: [0, 1]
         }, {
           direction: 'reverse',
           duration: 200,
           fill: 'forwards'
-        });
+        })*/
+        var currentHeight = phraseDiv.style.height;
+        phraseDiv.animate({
+          height: [currentHeight, 0],
+          opacity: [0, 1]
+        }, _defineProperty({
+          duration: 200,
+          fill: 'forwards'
+        }, "fill", 'forwards'));
         isPhraseDivRegisterDeleteArray[index] = true;
       }
 

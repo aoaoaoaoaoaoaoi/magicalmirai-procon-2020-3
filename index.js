@@ -131,12 +131,22 @@ const setDeletePhrase = () => {
       phraseDiv.style.top = newPos + "px";
       
       if(!isPhraseDivRegisterDeleteArray[index]){
-        phraseDiv.animate({
+        //phraseDiv.classList.add('fadeLyric');
+        /*phraseDiv.animate({
           opacity: [0, 1]
         }, {
           direction: 'reverse',
           duration: 200,
           fill: 'forwards'
+        })*/
+        let currentHeight = phraseDiv.style.height;
+        phraseDiv.animate({
+          height: [currentHeight, 0],
+          opacity: [0, 1]
+        }, {
+          duration: 200,
+          fill: 'forwards',
+          fill: 'forwards',
         })
         isPhraseDivRegisterDeleteArray[index] = true;
       }
@@ -149,7 +159,6 @@ const setDeletePhrase = () => {
       }
     }else{
       //一つ前のが移動してたら自分も上に移動
-      
     }
   });
 };
