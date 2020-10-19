@@ -5,6 +5,7 @@ let isAnimation = false;
 let phraseDivArray = [];
 let phraseArray = [];
 let phraseDivArrayForDelete = [];
+let isPhraseDivRegisterDeleteArray = [];
 let wordsArray = [];
 let currentPosition = 0;
 
@@ -73,10 +74,11 @@ const run = () =>{
         if (c !== current) {
           phraseArray.push(current);
           const phraseDiv = document.createElement("div");
-          phraseDiv.style.position = "absolute";
+          phraseDiv.style.position = "relative";
           phraseDiv.style.top = "0px";
           phraseDivArray.push(phraseDiv);
           phraseDivArrayForDelete.push(phraseDiv);
+          isPhraseDivRegisterDeleteArray.push(false);
           $('#text').append(phraseDiv);
           let words = current.children;
           Array.prototype.push.apply(wordsArray, words);
@@ -127,11 +129,27 @@ const setDeletePhrase = () => {
       let currentPos = parseInt(phraseDiv.style.top);
       let newPos = (currentPos - move);
       phraseDiv.style.top = newPos + "px";
+      
+      if(!isPhraseDivRegisterDeleteArray[index]){
+        phraseDiv.animate({
+          opacity: [0, 1]
+        }, {
+          direction: 'reverse',
+          duration: 200,
+          fill: 'forwards'
+        })
+        isPhraseDivRegisterDeleteArray[index] = true;
+      }
       if(parseInt(phraseDiv.style.top) < -1000){
         //削除
         phraseArray.splice(index, 1);
         phraseDivArrayForDelete.splice(index, 1);
+        isPhraseDivRegisterDeleteArray.splice(index, 1);
+        //phraseDiv.remove();
       }
+    }else{
+      //一つ前のが移動してたら自分も上に移動
+      
     }
   });
 };

@@ -20,15 +20,26 @@ body{
     height: 100%;
 }
 
-/*#content{
-    position:relative;
-}*/
+#contents{
+    /*position: relative;*/
+}
 
-#text > div > div{
+#text > div > div {
     /*transform: rotateX(15deg) rotateY(-15deg);*/
-    animation: showLyrics 0.1s ease-out forwards, moveLyrics 10s infinite;
+    animation: showLyrics 0.1s ease-out forwards, moveLyrics 100s infinite linear;
     display: inline-block;
+}
 
+#text > div {
+    text-align: center;
+}
+
+#text{
+    position: absolute;
+    top: 50%; /*親要素を起点に上から50%*/
+    left: 50%;  /*親要素を起点に左から50%*/
+    transform: translateY(-50%) translateX(-50%); /*要素の大きさの半分ずつを戻す*/
+    -webkit-transform: translateY(-50%) translateX(-50%);
 }
 
 span{
@@ -74,6 +85,9 @@ span{
   @keyframes moveLyrics {
     0% {
         transform: rotateZ(0deg);
+    }
+    50% {
+        transform: rotateZ(180deg);
     }
     100% {
         transform: rotateZ(360deg);

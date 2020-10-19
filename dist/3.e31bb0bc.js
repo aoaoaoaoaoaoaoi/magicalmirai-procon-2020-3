@@ -125,6 +125,7 @@ var isAnimation = false;
 var phraseDivArray = [];
 var phraseArray = [];
 var phraseDivArrayForDelete = [];
+var isPhraseDivRegisterDeleteArray = [];
 var wordsArray = [];
 var currentPosition = 0; // 単語ごとに歌詞を表示
 
@@ -195,10 +196,11 @@ var run = function run() {
         if (c !== current) {
           phraseArray.push(current);
           var phraseDiv = document.createElement("div");
-          phraseDiv.style.position = "absolute";
+          phraseDiv.style.position = "relative";
           phraseDiv.style.top = "0px";
           phraseDivArray.push(phraseDiv);
           phraseDivArrayForDelete.push(phraseDiv);
+          isPhraseDivRegisterDeleteArray.push(false);
           $('#text').append(phraseDiv);
           var words = current.children;
           Array.prototype.push.apply(wordsArray, words);
@@ -254,12 +256,25 @@ var setDeletePhrase = function setDeletePhrase() {
       var newPos = currentPos - move;
       phraseDiv.style.top = newPos + "px";
 
+      if (!isPhraseDivRegisterDeleteArray[index]) {
+        phraseDiv.animate({
+          opacity: [0, 1]
+        }, {
+          direction: 'reverse',
+          duration: 200,
+          fill: 'forwards'
+        });
+        isPhraseDivRegisterDeleteArray[index] = true;
+      }
+
       if (parseInt(phraseDiv.style.top) < -1000) {
         //削除
         phraseArray.splice(index, 1);
         phraseDivArrayForDelete.splice(index, 1);
+        isPhraseDivRegisterDeleteArray.splice(index, 1); //phraseDiv.remove();
       }
-    }
+    } else {//一つ前のが移動してたら自分も上に移動
+      }
   });
 };
 
