@@ -32,6 +32,7 @@ body{
 
 #text > div {
     text-align: center;
+    height: auto;
 }
 
 #text{
@@ -68,7 +69,7 @@ span{
 }
 
 .fadeLyric{
-    animation: fadeOut 200s linear forwards/*, moveHeight 200s linear forwards*/;
+    animation: fadeOut 200ms linear forwards/*, moveHeight 200ms linear forwards*/;
 }
 
 @keyframes showLyrics {
@@ -100,14 +101,17 @@ span{
 
   @keyframes fadeOut {
     0% {
-        opacity: 0;
+        opacity: 1;
     }
     100% {
-        opacity: 1;
+        opacity: 0;
     }
   }
 
   @keyframes moveHeight {
+    /*0% {
+        height: auto;
+    }*/
     100% {
         height: 0px;
     }

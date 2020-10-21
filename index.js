@@ -2,10 +2,17 @@ const { Player } = TextAliveApp;
 
 let songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 let isAnimation = false;
+
+//phrase
+let phraseId = 1;
 let phraseDivArray = [];
 let phraseArray = [];
 let phraseDivArrayForDelete = [];
-let isPhraseDivRegisterDeleteArray = [];
+let PhraseDivMoveTimesArray = [];
+let phraseMoveForHeight = []; //cssでheightを0にする時間に依存
+let phraseHeightDecrease = [];
+let phraseIds = [];
+
 let wordsArray = [];
 let currentPosition = 0;
 
@@ -74,14 +81,20 @@ const run = () =>{
         if (c !== current) {
           phraseArray.push(current);
           const phraseDiv = document.createElement("div");
+          let currentPhraseId = "phrase_" + phraseId;
+          phraseDiv.id = currentPhraseId;
+          phraseIds.push(currentPhraseId);
           phraseDiv.style.position = "relative";
           phraseDiv.style.top = "0px";
           phraseDivArray.push(phraseDiv);
           phraseDivArrayForDelete.push(phraseDiv);
-          isPhraseDivRegisterDeleteArray.push(false);
+          PhraseDivMoveTimesArray.push(0);
+          phraseMoveForHeight.push(0);
+          phraseHeightDecrease.push(0);
           $('#text').append(phraseDiv);
           let words = current.children;
           Array.prototype.push.apply(wordsArray, words);
+          ++phraseId;
           c = current;
         }
         current = current.next;
@@ -126,12 +139,11 @@ const setDeletePhrase = () => {
   copy.forEach((item, index) => {
     if(item.endTime < currentPosition){
       let phraseDiv = phraseDivArrayForDelete[index];
-      let currentPos = parseInt(phraseDiv.style.top);
-      let newPos = (currentPos - move);
-      phraseDiv.style.top = newPos + "px";
-      
-      if(!isPhraseDivRegisterDeleteArray[index]){
-        //phraseDiv.classList.add('fadeLyric');
+
+      if(PhraseDivMoveTimesArray[index] == 0){
+        let selecter = "#" + phraseIds[index];
+        let currentHeight = parseInt($(selecter).height());
+        phraseDiv.classList.add('fadeLyric');
         /*phraseDiv.animate({
           opacity: [0, 1]
         }, {
@@ -139,22 +151,51 @@ const setDeletePhrase = () => {
           duration: 200,
           fill: 'forwards'
         })*/
-        let currentHeight = phraseDiv.style.height;
-        phraseDiv.animate({
+
+        
+        /*console.log(selecter);
+        let l =$(selecter).height();
+        console.log(l);*/
+        phraseHeightDecrease[index] = currentHeight / 10;
+        phraseMoveForHeight[index] = (currentHeight / 2) / 10;//cssで200ms,updateが20msに一度処理
+        //console.log("array" + phraseMoveForHeight[index]);
+        /*phraseDiv.animate({
           height: [currentHeight, 0],
           opacity: [0, 1]
         }, {
           duration: 200,
           fill: 'forwards',
           fill: 'forwards',
-        })
-        isPhraseDivRegisterDeleteArray[index] = true;
+        })*/
       }
+
+      let currentPos = parseInt(phraseDiv.style.top);
+      //console.log("original" + currentPos);
+      if(PhraseDivMoveTimesArray[index] < 10){
+        currentPos -= phraseMoveForHeight[index];
+        let selecter = "#" + phraseIds[index];
+        let currentHeight = parseInt($(selecter).height());
+        let newHeight = currentHeight - phraseHeightDecrease[index];
+        if(newHeight < 0){
+          newHeight = 0;
+        }
+        phraseDiv.style.height = newHeight + "px";
+      }
+      //console.log("minus array" + currentPos);
+      let newPos = (currentPos - move);
+      //console.log("newPos" + newPos);
+      phraseDiv.style.top = newPos + "px";
+      
+ 
+      ++PhraseDivMoveTimesArray[index];
       if(parseInt(phraseDiv.style.top) < -1000){
         //削除
         phraseArray.splice(index, 1);
         phraseDivArrayForDelete.splice(index, 1);
-        isPhraseDivRegisterDeleteArray.splice(index, 1);
+        PhraseDivMoveTimesArray.splice(index, 1);
+        phraseMoveForHeight.splice(index, 1);
+        phraseIds.splice(index, 1);
+        phraseHeightDecrease.splice(index, 1);
         //phraseDiv.remove();
       }
     }else{

@@ -118,16 +118,20 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"index.js":[function(require,module,exports) {
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var _TextAliveApp = TextAliveApp,
     Player = _TextAliveApp.Player;
 var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
-var isAnimation = false;
+var isAnimation = false; //phrase
+
+var phraseId = 1;
 var phraseDivArray = [];
 var phraseArray = [];
 var phraseDivArrayForDelete = [];
-var isPhraseDivRegisterDeleteArray = [];
+var PhraseDivMoveTimesArray = [];
+var phraseMoveForHeight = []; //cssでheightを0にする時間に依存
+
+var phraseHeightDecrease = [];
+var phraseIds = [];
 var wordsArray = [];
 var currentPosition = 0; // 単語ごとに歌詞を表示
 
@@ -198,14 +202,20 @@ var run = function run() {
         if (c !== current) {
           phraseArray.push(current);
           var phraseDiv = document.createElement("div");
+          var currentPhraseId = "phrase_" + phraseId;
+          phraseDiv.id = currentPhraseId;
+          phraseIds.push(currentPhraseId);
           phraseDiv.style.position = "relative";
           phraseDiv.style.top = "0px";
           phraseDivArray.push(phraseDiv);
           phraseDivArrayForDelete.push(phraseDiv);
-          isPhraseDivRegisterDeleteArray.push(false);
+          PhraseDivMoveTimesArray.push(0);
+          phraseMoveForHeight.push(0);
+          phraseHeightDecrease.push(0);
           $('#text').append(phraseDiv);
           var words = current.children;
           Array.prototype.push.apply(wordsArray, words);
+          ++phraseId;
           c = current;
         }
 
@@ -254,13 +264,11 @@ var setDeletePhrase = function setDeletePhrase() {
   copy.forEach(function (item, index) {
     if (item.endTime < currentPosition) {
       var phraseDiv = phraseDivArrayForDelete[index];
-      var currentPos = parseInt(phraseDiv.style.top);
-      var newPos = currentPos - move;
-      phraseDiv.style.top = newPos + "px";
 
-      if (!isPhraseDivRegisterDeleteArray[index]) {
-        //phraseDiv.classList.add('fadeLyric');
-
+      if (PhraseDivMoveTimesArray[index] == 0) {
+        var selecter = "#" + phraseIds[index];
+        var currentHeight = parseInt($(selecter).height());
+        phraseDiv.classList.add('fadeLyric');
         /*phraseDiv.animate({
           opacity: [0, 1]
         }, {
@@ -268,22 +276,57 @@ var setDeletePhrase = function setDeletePhrase() {
           duration: 200,
           fill: 'forwards'
         })*/
-        var currentHeight = phraseDiv.style.height;
-        phraseDiv.animate({
+
+        /*console.log(selecter);
+        let l =$(selecter).height();
+        console.log(l);*/
+
+        phraseHeightDecrease[index] = currentHeight / 10;
+        phraseMoveForHeight[index] = currentHeight / 2 / 10; //cssで200ms,updateが20msに一度処理
+        //console.log("array" + phraseMoveForHeight[index]);
+
+        /*phraseDiv.animate({
           height: [currentHeight, 0],
           opacity: [0, 1]
-        }, _defineProperty({
+        }, {
           duration: 200,
-          fill: 'forwards'
-        }, "fill", 'forwards'));
-        isPhraseDivRegisterDeleteArray[index] = true;
+          fill: 'forwards',
+          fill: 'forwards',
+        })*/
       }
+
+      var currentPos = parseInt(phraseDiv.style.top); //console.log("original" + currentPos);
+
+      if (PhraseDivMoveTimesArray[index] < 10) {
+        currentPos -= phraseMoveForHeight[index];
+
+        var _selecter = "#" + phraseIds[index];
+
+        var _currentHeight = parseInt($(_selecter).height());
+
+        var newHeight = _currentHeight - phraseHeightDecrease[index];
+
+        if (newHeight < 0) {
+          newHeight = 0;
+        }
+
+        phraseDiv.style.height = newHeight + "px";
+      } //console.log("minus array" + currentPos);
+
+
+      var newPos = currentPos - move; //console.log("newPos" + newPos);
+
+      phraseDiv.style.top = newPos + "px";
+      ++PhraseDivMoveTimesArray[index];
 
       if (parseInt(phraseDiv.style.top) < -1000) {
         //削除
         phraseArray.splice(index, 1);
         phraseDivArrayForDelete.splice(index, 1);
-        isPhraseDivRegisterDeleteArray.splice(index, 1); //phraseDiv.remove();
+        PhraseDivMoveTimesArray.splice(index, 1);
+        phraseMoveForHeight.splice(index, 1);
+        phraseIds.splice(index, 1);
+        phraseHeightDecrease.splice(index, 1); //phraseDiv.remove();
       }
     } else {//一つ前のが移動してたら自分も上に移動
       }
@@ -319,7 +362,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57259" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52610" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
