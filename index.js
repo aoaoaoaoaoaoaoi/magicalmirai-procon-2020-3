@@ -118,12 +118,33 @@ const setMakeWords = () => {
     if(item.startTime < currentPosition + 500){
       const wordDiv = document.createElement("div");
       let word = wordsArray.shift();
+      let isNoun = word.pos === "N"/* || word.pos === "PN" || word.pos === "X"*/;//名詞
       let charas = word.children;
       for(var i = 0; i < charas.length; ++i){
         const span = document.createElement("span");
         span.innerHTML = charas[i].text;
+        /*const charaDiv = document.createElement("div");
+        charaDiv.innerHTML = charas[i].text;*/
         wordDiv.appendChild(span);
       }
+        //演出
+        if(isNoun){
+          const pSpan = document.createElement("span");
+          pSpan.innerHTML = "★";
+          pSpan.classList.add('text_particle');
+          pSpan.classList.add('text_particle_anim_0');
+          /*pSpan.style.position = "absolute";
+          pSpan.style.left = "0px";
+          pSpan.style.color = "0px";*/
+          wordDiv.appendChild(pSpan);
+
+          const pSpan45 = document.createElement("span");
+          pSpan45.innerHTML = "★";
+          pSpan45.classList.add('text_particle');
+          pSpan45.classList.add('text_particle_anim_45');
+          wordDiv.appendChild(pSpan45);
+        }
+
       phraseDivArray[0].appendChild(wordDiv);
       if(word.parent.lastWord == word){
         phraseDivArray.shift();

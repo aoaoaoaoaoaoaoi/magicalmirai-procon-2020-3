@@ -240,12 +240,37 @@ var setMakeWords = function setMakeWords() {
     if (item.startTime < currentPosition + 500) {
       var wordDiv = document.createElement("div");
       var word = wordsArray.shift();
+      var isNoun = word.pos === "N"
+      /* || word.pos === "PN" || word.pos === "X"*/
+      ; //名詞
+
       var charas = word.children;
 
       for (var i = 0; i < charas.length; ++i) {
         var span = document.createElement("span");
         span.innerHTML = charas[i].text;
+        /*const charaDiv = document.createElement("div");
+        charaDiv.innerHTML = charas[i].text;*/
+
         wordDiv.appendChild(span);
+      } //演出
+
+
+      if (isNoun) {
+        var pSpan = document.createElement("span");
+        pSpan.innerHTML = "★";
+        pSpan.classList.add('text_particle');
+        pSpan.classList.add('text_particle_anim_0');
+        /*pSpan.style.position = "absolute";
+        pSpan.style.left = "0px";
+        pSpan.style.color = "0px";*/
+
+        wordDiv.appendChild(pSpan);
+        var pSpan45 = document.createElement("span");
+        pSpan45.innerHTML = "★";
+        pSpan45.classList.add('text_particle');
+        pSpan45.classList.add('text_particle_anim_45');
+        wordDiv.appendChild(pSpan45);
       }
 
       phraseDivArray[0].appendChild(wordDiv);
