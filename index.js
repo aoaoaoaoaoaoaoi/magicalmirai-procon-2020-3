@@ -137,7 +137,7 @@ const setDeletePhrase = () => {
   let move = 8;
   let copy = phraseArray;
   copy.forEach((item, index) => {
-    if(item.endTime < currentPosition){
+    if(item.endTime < currentPosition + 100){
       let phraseDiv = phraseDivArrayForDelete[index];
 
       if(PhraseDivMoveTimesArray[index] == 0){
