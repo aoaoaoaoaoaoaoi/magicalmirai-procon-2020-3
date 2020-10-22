@@ -43,6 +43,10 @@ body{
     -webkit-transform: translateY(-50%) translateX(-50%);
 }
 
+.noun_text {
+    color: #40e0d0;
+}
+
 .text_particle {
     position: absolute;
     left: 25%;
@@ -56,6 +60,10 @@ body{
 
 .text_particle_anim_45 {
     animation: textParticle45 0.5s ease-out forwards;
+}
+
+.text_particle_anim_225 {
+    animation: textParticle225 0.5s ease-out forwards;
 }
 
 span{
@@ -160,6 +168,25 @@ span{
         transform: translate(-100%, -100%)
     }
   }
+
+    /*225*/
+    @keyframes textParticle225 {
+        0% {
+            opacity: 0;
+            font-size: 0px;
+            transform: translate(0, 0%)
+        }
+        20% {
+            opacity: 0.8;
+            font-size: 30px;
+            transform: translate(20%, 20%)
+        }
+        100% {
+            opacity: 0;
+            font-size: 40px;
+            transform: translate(100%, 100%)
+        }
+      }
 
 
 /*# sourceMappingURL=/3.9ad09f98.css.map */

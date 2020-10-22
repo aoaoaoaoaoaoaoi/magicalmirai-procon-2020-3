@@ -129,6 +129,8 @@ const setMakeWords = () => {
       }
         //演出
         if(isNoun){
+wordDiv.classList.add("noun_text");
+
           const pSpan = document.createElement("span");
           pSpan.innerHTML = "★";
           pSpan.classList.add('text_particle');
@@ -143,6 +145,12 @@ const setMakeWords = () => {
           pSpan45.classList.add('text_particle');
           pSpan45.classList.add('text_particle_anim_45');
           wordDiv.appendChild(pSpan45);
+
+          const pSpan225 = document.createElement("span");
+          pSpan45.innerHTML = "★";
+          pSpan45.classList.add('text_particle');
+          pSpan45.classList.add('text_particle_anim_225');
+          wordDiv.appendChild(pSpan225);
         }
 
       phraseDivArray[0].appendChild(wordDiv);
