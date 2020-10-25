@@ -240,18 +240,13 @@ var setMakeWords = function setMakeWords() {
     if (item.startTime < currentPosition + 500) {
       var wordDiv = document.createElement("div");
       var word = wordsArray.shift();
-      var isNoun = word.pos === "N"
-      /* || word.pos === "PN" || word.pos === "X"*/
-      ; //名詞
+      var isNoun = word.pos === "N"; //名詞
 
       var charas = word.children;
 
       for (var i = 0; i < charas.length; ++i) {
         var span = document.createElement("span");
         span.innerHTML = charas[i].text;
-        /*const charaDiv = document.createElement("div");
-        charaDiv.innerHTML = charas[i].text;*/
-
         wordDiv.appendChild(span);
       } //演出
 
@@ -262,10 +257,6 @@ var setMakeWords = function setMakeWords() {
         pSpan.innerHTML = "★";
         pSpan.classList.add('text_particle');
         pSpan.classList.add('text_particle_anim_0');
-        /*pSpan.style.position = "absolute";
-        pSpan.style.left = "0px";
-        pSpan.style.color = "0px";*/
-
         wordDiv.appendChild(pSpan);
         var pSpan45 = document.createElement("span");
         pSpan45.innerHTML = "★";
@@ -300,33 +291,11 @@ var setDeletePhrase = function setDeletePhrase() {
         var selecter = "#" + phraseIds[index];
         var currentHeight = parseInt($(selecter).height());
         phraseDiv.classList.add('fadeLyric');
-        /*phraseDiv.animate({
-          opacity: [0, 1]
-        }, {
-          direction: 'reverse',
-          duration: 200,
-          fill: 'forwards'
-        })*/
-
-        /*console.log(selecter);
-        let l =$(selecter).height();
-        console.log(l);*/
-
         phraseHeightDecrease[index] = currentHeight / 10;
         phraseMoveForHeight[index] = currentHeight / 2 / 10; //cssで200ms,updateが20msに一度処理
-        //console.log("array" + phraseMoveForHeight[index]);
-
-        /*phraseDiv.animate({
-          height: [currentHeight, 0],
-          opacity: [0, 1]
-        }, {
-          duration: 200,
-          fill: 'forwards',
-          fill: 'forwards',
-        })*/
       }
 
-      var currentPos = parseInt(phraseDiv.style.top); //console.log("original" + currentPos);
+      var currentPos = parseInt(phraseDiv.style.top);
 
       if (PhraseDivMoveTimesArray[index] < 10) {
         currentPos -= phraseMoveForHeight[index];
@@ -342,11 +311,9 @@ var setDeletePhrase = function setDeletePhrase() {
         }
 
         phraseDiv.style.height = newHeight + "px";
-      } //console.log("minus array" + currentPos);
+      }
 
-
-      var newPos = currentPos - move; //console.log("newPos" + newPos);
-
+      var newPos = currentPos - move;
       phraseDiv.style.top = newPos + "px";
       ++PhraseDivMoveTimesArray[index];
 
@@ -357,14 +324,15 @@ var setDeletePhrase = function setDeletePhrase() {
         PhraseDivMoveTimesArray.splice(index, 1);
         phraseMoveForHeight.splice(index, 1);
         phraseIds.splice(index, 1);
-        phraseHeightDecrease.splice(index, 1); //phraseDiv.remove();
+        phraseHeightDecrease.splice(index, 1);
       }
-    } else {//一つ前のが移動してたら自分も上に移動
-      }
+    }
   });
 };
 
-window.run = run;
+window.run = run; //テキストエリアのwidthを計算
+//書くワードの60pxでのwidthを保存
+//次のワードの60pxでのwidthを足して大きいなら改行
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -393,7 +361,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59643" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57126" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

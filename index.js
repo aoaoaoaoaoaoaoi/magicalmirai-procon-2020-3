@@ -118,13 +118,11 @@ const setMakeWords = () => {
     if(item.startTime < currentPosition + 500){
       const wordDiv = document.createElement("div");
       let word = wordsArray.shift();
-      let isNoun = word.pos === "N"/* || word.pos === "PN" || word.pos === "X"*/;//名詞
+      let isNoun = word.pos === "N";//名詞
       let charas = word.children;
       for(var i = 0; i < charas.length; ++i){
         const span = document.createElement("span");
         span.innerHTML = charas[i].text;
-        /*const charaDiv = document.createElement("div");
-        charaDiv.innerHTML = charas[i].text;*/
         wordDiv.appendChild(span);
       }
         //演出
@@ -135,9 +133,6 @@ wordDiv.classList.add("noun_text");
           pSpan.innerHTML = "★";
           pSpan.classList.add('text_particle');
           pSpan.classList.add('text_particle_anim_0');
-          /*pSpan.style.position = "absolute";
-          pSpan.style.left = "0px";
-          pSpan.style.color = "0px";*/
           wordDiv.appendChild(pSpan);
 
           const pSpan45 = document.createElement("span");
@@ -173,33 +168,11 @@ const setDeletePhrase = () => {
         let selecter = "#" + phraseIds[index];
         let currentHeight = parseInt($(selecter).height());
         phraseDiv.classList.add('fadeLyric');
-        /*phraseDiv.animate({
-          opacity: [0, 1]
-        }, {
-          direction: 'reverse',
-          duration: 200,
-          fill: 'forwards'
-        })*/
-
-        
-        /*console.log(selecter);
-        let l =$(selecter).height();
-        console.log(l);*/
         phraseHeightDecrease[index] = currentHeight / 10;
         phraseMoveForHeight[index] = (currentHeight / 2) / 10;//cssで200ms,updateが20msに一度処理
-        //console.log("array" + phraseMoveForHeight[index]);
-        /*phraseDiv.animate({
-          height: [currentHeight, 0],
-          opacity: [0, 1]
-        }, {
-          duration: 200,
-          fill: 'forwards',
-          fill: 'forwards',
-        })*/
       }
 
       let currentPos = parseInt(phraseDiv.style.top);
-      //console.log("original" + currentPos);
       if(PhraseDivMoveTimesArray[index] < 10){
         currentPos -= phraseMoveForHeight[index];
         let selecter = "#" + phraseIds[index];
@@ -210,9 +183,7 @@ const setDeletePhrase = () => {
         }
         phraseDiv.style.height = newHeight + "px";
       }
-      //console.log("minus array" + currentPos);
       let newPos = (currentPos - move);
-      //console.log("newPos" + newPos);
       phraseDiv.style.top = newPos + "px";
       
  
@@ -225,12 +196,13 @@ const setDeletePhrase = () => {
         phraseMoveForHeight.splice(index, 1);
         phraseIds.splice(index, 1);
         phraseHeightDecrease.splice(index, 1);
-        //phraseDiv.remove();
       }
-    }else{
-      //一つ前のが移動してたら自分も上に移動
     }
   });
 };
 
 window.run = run
+
+//テキストエリアのwidthを計算
+//書くワードの60pxでのwidthを保存
+//次のワードの60pxでのwidthを足して大きいなら改行
