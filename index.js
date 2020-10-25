@@ -16,13 +16,6 @@ let phraseIds = [];
 let wordsArray = [];
 let currentPosition = 0;
 
-// 単語ごとに歌詞を表示
-const animateWord = (now, unit) => {
-  if (unit.contains(now)) {
-    $('#text').html(unit.text);
-  }
-};
-
 const run = () =>{
   //初期化処理
   $('#info').empty();
@@ -44,10 +37,6 @@ const run = () =>{
     onVideoReady: (v) => {
       console.log('VideoReady');
       let infoContents = '';
-      /*infoContents += '<h1>楽曲情報</h1>';
-      infoContents += '<h2>楽曲名：<br>' + player.data.song.name + '</h2>';
-      infoContents += '<h2>アーティスト名：<br>' + player.data.song.artist.name + '</h2>';
-      $('#info').html(infoContents);*/
       $('#text').html('[再生準備待機中]');
     },
 
@@ -57,12 +46,6 @@ const run = () =>{
       console.log('TimerReady');
       $('#text').html('');
       player.requestPlay();
-      // 定期的に呼ばれる各単語の "animate" 関数をセットする
-      /*let w = player.video.firstPhrase;
-      while (w) {
-        w.animate = animateWord;
-        w = w.next;
-      }*/
     },
 
     onTimeUpdate: (position) => {

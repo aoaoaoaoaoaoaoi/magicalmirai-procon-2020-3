@@ -133,13 +133,7 @@ var phraseMoveForHeight = []; //cssでheightを0にする時間に依存
 var phraseHeightDecrease = [];
 var phraseIds = [];
 var wordsArray = [];
-var currentPosition = 0; // 単語ごとに歌詞を表示
-
-var animateWord = function animateWord(now, unit) {
-  if (unit.contains(now)) {
-    $('#text').html(unit.text);
-  }
-};
+var currentPosition = 0;
 
 var run = function run() {
   //初期化処理
@@ -162,11 +156,6 @@ var run = function run() {
     onVideoReady: function onVideoReady(v) {
       console.log('VideoReady');
       var infoContents = '';
-      /*infoContents += '<h1>楽曲情報</h1>';
-      infoContents += '<h2>楽曲名：<br>' + player.data.song.name + '</h2>';
-      infoContents += '<h2>アーティスト名：<br>' + player.data.song.artist.name + '</h2>';
-      $('#info').html(infoContents);*/
-
       $('#text').html('[再生準備待機中]');
     },
     // 再生準備完了後、呼ばれる
@@ -174,13 +163,7 @@ var run = function run() {
     onTimerReady: function onTimerReady() {
       console.log('TimerReady');
       $('#text').html('');
-      player.requestPlay(); // 定期的に呼ばれる各単語の "animate" 関数をセットする
-
-      /*let w = player.video.firstPhrase;
-      while (w) {
-        w.animate = animateWord;
-        w = w.next;
-      }*/
+      player.requestPlay();
     },
     onTimeUpdate: function onTimeUpdate(position) {
       // 歌詞情報がなければこれで処理を終わる

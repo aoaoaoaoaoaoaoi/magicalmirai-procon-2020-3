@@ -20,8 +20,25 @@ body{
     height: 100%;
 }
 
+#background-object-effect > div{
+    color:#bce2e8;
+    position: fixed;
+    z-index: -1;
+}
+
+#effect-1{
+    animation: effect1 3s ease-out forwards infinite;
+}
+
+#effect-2{
+    animation: effect2 2s ease-out forwards infinite;
+}
+
+#effect-3{
+    animation: effect3 1s ease-out forwards infinite;
+}
+
 #text > div > div {
-    /*transform: rotateX(15deg) rotateY(-15deg);*/
     animation: showLyrics 0.1s ease-out forwards, moveLyrics 100s infinite linear;
     display: inline-block;
 }
@@ -164,6 +181,52 @@ span{
             transform: translate(100%, 100%)
         }
       }
+
+      @keyframes effect1 {
+        0% {
+            font-size: 300px;
+            left: -20%;
+            top: -20%;
+            opacity: 0.7;
+        }
+        100% {
+            opacity: 0;
+            left: 50%;
+            top:50%;
+            font-size: 0px;
+        }
+      }
+
+      @keyframes effect2 {
+        0% {
+            font-size: 200px;
+            left: 0%;
+            top: 20%;
+            opacity: 0.7;
+        }
+        100% {
+            opacity: 0;
+            left: 50%;
+            top:50%;
+            font-size: 0px;
+        }
+      }
+
+      @keyframes effect3 {
+        0% {
+            font-size: 100px;
+            left: 80%;
+            top: 10%;
+            opacity: 0.7;
+        }
+        100% {
+            opacity: 0;
+            left: 50%;
+            top:50%;
+            font-size: 0px;
+        }
+      }
+
 
 
 /*# sourceMappingURL=/3.9ad09f98.css.map */
