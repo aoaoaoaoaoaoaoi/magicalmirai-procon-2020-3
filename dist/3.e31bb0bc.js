@@ -313,9 +313,10 @@ var setDeletePhrase = function setDeletePhrase() {
   });
 };
 
-window.run = run; //テキストエリアのwidthを計算
-//書くワードの60pxでのwidthを保存
-//次のワードの60pxでのwidthを足して大きいなら改行
+window.run = run; //音楽再生中のみ、丸が出てくるようにする
+//サビはフィーバータイムなので丸の数が増えます
+//リスナーがクリックした位置に丸を増やす、最大で10くらい
+//文字をクリックすると蝶が出るとか発行するとか、斜めに横切るとか
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -344,7 +345,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57126" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54190" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
