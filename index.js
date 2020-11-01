@@ -26,115 +26,109 @@ const player = new Player({ app: true , mediaElement: document.querySelector('#m
 
 const run = () =>{
   $('#loading').removeClass("display-none");
-
-  //初期化処理
-  //$('#info').empty();
-  //$('#media').empty();
-
-  //console.log('Run');
+  player.requestPlay();
 }
 
-  player.addListener({
-    onAppReady: (app) => {
-      console.log('AppReady');
-      player.createFromSongUrl(songUrl);
-    },
+player.addListener({
+  onAppReady: (app) => {
+    console.log('AppReady');
+    player.createFromSongUrl(songUrl);
+  },
 
-    // 楽曲情報読み込み完了後、呼ばれる
-    // この時点ではrequestPlay()等が実行不能
-    onVideoReady: (v) => {
-      console.log('VideoReady');
-      let infoContents = '';
-    },
+  // 楽曲情報読み込み完了後、呼ばれる
+  // この時点ではrequestPlay()等が実行不能
+  onVideoReady: (v) => {
+    console.log('VideoReady');
+    let infoContents = '';
+  },
 
-    // 再生準備完了後、呼ばれる
-    // これ以降、requestPlay()等が実行可能
-    onTimerReady: () => {
-      console.log('TimerReady');
-      $('#text').html('');
-      player.requestPlay();//位置をボタンを押してからに変更
-    },
+  // 再生準備完了後、呼ばれる
+  // これ以降、requestPlay()等が実行可能
+  onTimerReady: () => {
+    console.log('TimerReady');
+    $("#run-button").prop("disabled", false);
+  },
 
-    onPlay: () => {
-      if(isFirstPlay){
-        $('#loading').addClass("display-none");
-        for(var i = 1; i <= effectCount; ++i){
-          let target = "effect-" + i;
-          let targetObj = "#" + target;
-          $(targetObj).addClass(target);
-        }
-        isFirstPlay = false;
-        return;
-      }
+  onPlay: () => {
+    if(isFirstPlay){
+      $('#loading').addClass("display-none");
       for(var i = 1; i <= effectCount; ++i){
         let target = "effect-" + i;
         let targetObj = "#" + target;
-        $(targetObj).removeClass("animation-pause");
-        $(targetObj).addClass("animation-running");
+        $(targetObj).addClass(target);
       }
-      for(var i = wordDivArray.length - 1; 0 <= i; --i){
-        if(wordDivArray[i] == null) break; //div自体が消えても残ってるっぽい
-        wordDivArray[i].classList.remove("animation-pause");
-        wordDivArray[i].classList.add("animation-running");
-      }
-      console.log("再生開始");
-    },
+      isFirstPlay = false;
+      return;
+    }
+    for(var i = 1; i <= effectCount; ++i){
+      let target = "effect-" + i;
+      let targetObj = "#" + target;
+      $(targetObj).removeClass("animation-pause");
+      $(targetObj).addClass("animation-running");
+    }
+    for(var i = wordDivArray.length - 1; 0 <= i; --i){
+      if(wordDivArray[i] == null) break; //div自体が消えても残ってるっぽい
+      wordDivArray[i].classList.remove("animation-pause");
+      wordDivArray[i].classList.add("animation-running");
+    }
+    console.log("再生開始");
+  },
 
-    onPause: () => {
-      for(var i = 1; i <= effectCount; ++i){
-        let target = "effect-" + i;
-        let targetObj = "#" + target;
-        $(targetObj).removeClass("animation-running");
-        $(targetObj).addClass("animation-pause");
-      }
-      for(var i = wordDivArray.length - 1; 0 <= i; --i){
-        console.log("aa");
-        if(wordDivArray[i] == null) break;
-        console.log("aaa");
-        wordDivArray[i].classList.remove("animation-running");
-        wordDivArray[i].classList.add("animation-pause");
-      }
-      console.log("再生停止");
-    },
+  onPause: () => {
+    for(var i = 1; i <= effectCount; ++i){
+      let target = "effect-" + i;
+      let targetObj = "#" + target;
+      $(targetObj).removeClass("animation-running");
+      $(targetObj).addClass("animation-pause");
+    }
+    for(var i = wordDivArray.length - 1; 0 <= i; --i){
+      console.log("aa");
+      if(wordDivArray[i] == null) break;
+      console.log("aaa");
+      wordDivArray[i].classList.remove("animation-running");
+      wordDivArray[i].classList.add("animation-pause");
+    }
+    console.log("再生停止");
+  },
 
-    onTimeUpdate: (position) => {
+  onTimeUpdate: (position) => {
 
-      // 歌詞情報がなければこれで処理を終わる
-      if (!player.video.firstChar) {
-        return;
+    // 歌詞情報がなければこれで処理を終わる
+    if (!player.video.firstChar) {
+      return;
+    }
+    currentPosition = position;
+    if(!isAnimation){
+      isAnimation = true;
+      update();
+    }
+    // 500ms先から始まる文字～フレーズの最後まで取得
+    let current = c || player.video.firstPhrase;
+    while (current && current.startTime < position + 500) {
+      if (c !== current) {
+        phraseArray.push(current);
+        const phraseDiv = document.createElement("div");
+        let currentPhraseId = "phrase_" + phraseId;
+        phraseDiv.id = currentPhraseId;
+        phraseIds.push(currentPhraseId);
+        phraseDiv.style.position = "relative";
+        phraseDiv.style.top = "0px";
+        phraseDivArray.push(phraseDiv);
+        phraseDivArrayForDelete.push(phraseDiv);
+        PhraseDivMoveTimesArray.push(0);
+        phraseMoveForHeight.push(0);
+        phraseHeightDecrease.push(0);
+        $('#text').append(phraseDiv);
+        let words = current.children;
+        Array.prototype.push.apply(wordsArray, words);
+        ++phraseId;
+        c = current;
       }
-      currentPosition = position;
-      if(!isAnimation){
-        isAnimation = true;
-        update();
-      }
-      // 500ms先から始まる文字～フレーズの最後まで取得
-      let current = c || player.video.firstPhrase;
-      while (current && current.startTime < position + 500) {
-        if (c !== current) {
-          phraseArray.push(current);
-          const phraseDiv = document.createElement("div");
-          let currentPhraseId = "phrase_" + phraseId;
-          phraseDiv.id = currentPhraseId;
-          phraseIds.push(currentPhraseId);
-          phraseDiv.style.position = "relative";
-          phraseDiv.style.top = "0px";
-          phraseDivArray.push(phraseDiv);
-          phraseDivArrayForDelete.push(phraseDiv);
-          PhraseDivMoveTimesArray.push(0);
-          phraseMoveForHeight.push(0);
-          phraseHeightDecrease.push(0);
-          $('#text').append(phraseDiv);
-          let words = current.children;
-          Array.prototype.push.apply(wordsArray, words);
-          ++phraseId;
-          c = current;
-        }
-        current = current.next;
-      }
-    },
-  
-  });
+      current = current.next;
+    }
+  },
+
+});
 
 const update = () =>{
   let delay = 1000 / 50; // 1 秒で 50 フレーム

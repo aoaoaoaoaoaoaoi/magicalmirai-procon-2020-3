@@ -146,10 +146,8 @@ var player = new Player({
 });
 
 var run = function run() {
-  $('#loading').removeClass("display-none"); //初期化処理
-  //$('#info').empty();
-  //$('#media').empty();
-  //console.log('Run');
+  $('#loading').removeClass("display-none");
+  player.requestPlay();
 };
 
 player.addListener({
@@ -167,8 +165,7 @@ player.addListener({
   // これ以降、requestPlay()等が実行可能
   onTimerReady: function onTimerReady() {
     console.log('TimerReady');
-    $('#text').html('');
-    player.requestPlay(); //位置をボタンを押してからに変更
+    $("#run-button").prop("disabled", false);
   },
   onPlay: function onPlay() {
     if (isFirstPlay) {
@@ -400,7 +397,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56071" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50659" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
