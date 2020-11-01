@@ -17,6 +17,8 @@ body{
     bottom: 0;
     right:0;
     color:black;
+    width:170px;
+    height:95px;
 }
 
 .kakomi{
@@ -36,6 +38,7 @@ body{
 button{
     background: transparent; 
     border: none;
+    outline: none;
 }
 
 .kakomi-text{

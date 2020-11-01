@@ -123,7 +123,8 @@ var _TextAliveApp = TextAliveApp,
 var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 var isAnimation = false;
 var isFirstPlay = true;
-var effectCount = 3; //phrase
+var effectCount = 3;
+var timer; //phrase
 
 var phraseId = 1;
 var phraseDivArray = [];
@@ -146,16 +147,29 @@ var player = new Player({
 });
 
 var run = function run() {
-  $('#loading').removeClass("display-none");
   player.requestPlay();
+  changeCtrlStateByPlay();
 };
 
-var pause = function pause() {//$('#loading').removeClass("display-none");
-  //player.requestPlay();
+var changeCtrlStateByPlay = function changeCtrlStateByPlay() {
+  $('#run-button').addClass("display-none");
+  $('#pause-button').removeClass("display-none");
+  $('#stop-button').removeClass("display-none");
 };
 
-var stop = function stop() {//$('#loading').removeClass("display-none");
-  //player.requestPlay();
+var pause = function pause() {
+  player.requestPause();
+  $('#pause-button').addClass("display-none");
+  $('#run-button').removeClass("display-none");
+  $('#stop-button').removeClass("display-none");
+};
+
+var stop = function stop() {
+  player.requestStop();
+  reset();
+  $('#run-button').removeClass("display-none");
+  $('#stop-button').addClass("display-none");
+  $('#pause-button').addClass("display-none");
 };
 
 player.addListener({
@@ -167,7 +181,6 @@ player.addListener({
   // この時点ではrequestPlay()等が実行不能
   onVideoReady: function onVideoReady(v) {
     console.log('VideoReady');
-    var infoContents = '';
     $("#song-name").html(player.data.song.name);
     $("#song-artist").html(player.data.song.artist.name);
   },
@@ -175,12 +188,13 @@ player.addListener({
   // これ以降、requestPlay()等が実行可能
   onTimerReady: function onTimerReady() {
     console.log('TimerReady');
+    $('#text').empty();
     $("#run-button").prop("disabled", false);
   },
   onPlay: function onPlay() {
-    if (isFirstPlay) {
-      $('#loading').addClass("display-none");
+    changeCtrlStateByPlay();
 
+    if (isFirstPlay) {
       for (var i = 1; i <= effectCount; ++i) {
         var target = "effect-" + i;
         var targetObj = "#" + target;
@@ -272,7 +286,7 @@ player.addListener({
 var update = function update() {
   var delay = 1000 / 50; // 1 秒で 50 フレーム
 
-  var timer = setInterval(function () {
+  timer = setInterval(function () {
     setMakeWords();
     setDeletePhrase();
   }, delay);
@@ -376,7 +390,47 @@ var setDeletePhrase = function setDeletePhrase() {
   });
 };
 
-window.run = run; //サビはフィーバータイムなので丸の数が増えます
+var reset = function reset() {
+  $('#text').empty();
+  clearInterval(timer);
+  timer = null; //TODO:3つに戻す
+
+  for (var i = 1; i <= effectCount; ++i) {
+    var target = "effect-" + i;
+    var targetObj = "#" + target;
+
+    if (3 < i) {
+      $(targetObj).remove();
+      continue;
+    }
+
+    $(targetObj).removeClass(target);
+    $(targetObj).removeClass("animation-pause");
+    $(targetObj).removeClass("animation-running");
+  }
+
+  isAnimation = false;
+  isFirstPlay = true;
+  effectCount = 3;
+  phraseId = 1;
+  phraseDivArray = [];
+  phraseArray = [];
+  phraseDivArrayForDelete = [];
+  PhraseDivMoveTimesArray = [];
+  phraseMoveForHeight = [];
+  phraseHeightDecrease = [];
+  phraseIds = [];
+  wordsArray = [];
+  wordDivArray = [];
+  currentPosition = 0;
+  c = null;
+  lyricId = 1;
+};
+
+window.run = run;
+window.pause = pause;
+window.stop = stop; //ボタン微妙にバグってる
+//サビはフィーバータイムなので丸の数が増えます
 //リスナーがクリックした位置に丸を増やす、最大で10くらい
 //文字をクリックすると蝶が出るとか発行するとか、斜めに横切るとか
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {

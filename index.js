@@ -4,6 +4,7 @@ let songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 let isAnimation = false;
 let isFirstPlay = true;
 let effectCount = 3;
+let timer;
 
 //phrase
 let phraseId = 1;
@@ -25,18 +26,29 @@ let lyricId = 1;//TODO：初めから再生した時に数をリセットする�
 const player = new Player({ app: true , mediaElement: document.querySelector('#media')});
 
 const run = () =>{
-  $('#loading').removeClass("display-none");
   player.requestPlay();
+  changeCtrlStateByPlay();
+}
+
+const changeCtrlStateByPlay = () =>{
+  $('#run-button').addClass("display-none");
+  $('#pause-button').removeClass("display-none");
+  $('#stop-button').removeClass("display-none");
 }
 
 const pause = () =>{
-  //$('#loading').removeClass("display-none");
-  //player.requestPlay();
+  player.requestPause();
+  $('#pause-button').addClass("display-none");
+  $('#run-button').removeClass("display-none");
+  $('#stop-button').removeClass("display-none");
 }
 
 const stop = () =>{
-  //$('#loading').removeClass("display-none");
-  //player.requestPlay();
+  player.requestStop();
+  reset();
+  $('#run-button').removeClass("display-none");
+  $('#stop-button').addClass("display-none");
+  $('#pause-button').addClass("display-none");
 }
 
 player.addListener({
@@ -49,7 +61,6 @@ player.addListener({
   // この時点ではrequestPlay()等が実行不能
   onVideoReady: (v) => {
     console.log('VideoReady');
-    let infoContents = '';
     $("#song-name").html(player.data.song.name);
     $("#song-artist").html(player.data.song.artist.name);
   },
@@ -58,12 +69,13 @@ player.addListener({
   // これ以降、requestPlay()等が実行可能
   onTimerReady: () => {
     console.log('TimerReady');
+    $('#text').empty();
     $("#run-button").prop("disabled", false);
   },
 
   onPlay: () => {
+    changeCtrlStateByPlay();
     if(isFirstPlay){
-      $('#loading').addClass("display-none");
       for(var i = 1; i <= effectCount; ++i){
         let target = "effect-" + i;
         let targetObj = "#" + target;
@@ -144,7 +156,7 @@ player.addListener({
 
 const update = () =>{
   let delay = 1000 / 50; // 1 秒で 50 フレーム
-  let timer = setInterval(function() {
+  timer = setInterval(function() {
   setMakeWords();
   setDeletePhrase();
 }, delay)
@@ -241,8 +253,51 @@ const setDeletePhrase = () => {
   });
 };
 
-window.run = run
+const reset = () =>{
+  $('#text').empty();
 
+ clearInterval(timer);
+ timer = null;
+
+ //TODO:3つに戻す
+ for(var i = 1; i <= effectCount; ++i){
+  let target = "effect-" + i;
+  let targetObj = "#" + target;
+  if(3 < i){
+   $(targetObj).remove();
+   continue;
+  }
+  $(targetObj).removeClass(target);
+  $(targetObj).removeClass("animation-pause");
+  $(targetObj).removeClass("animation-running");
+}
+
+ isAnimation = false;
+ isFirstPlay = true;
+ effectCount = 3;
+
+ phraseId = 1;
+ phraseDivArray = [];
+ phraseArray = [];
+ phraseDivArrayForDelete = [];
+ PhraseDivMoveTimesArray = [];
+ phraseMoveForHeight = [];
+ phraseHeightDecrease = [];
+ phraseIds = [];
+
+ wordsArray = [];
+ wordDivArray = [];
+ currentPosition = 0;
+
+ c = null;
+ lyricId = 1;
+}
+
+window.run = run
+window.pause = pause
+window.stop = stop
+
+//ボタン微妙にバグってる
 //サビはフィーバータイムなので丸の数が増えます
 //リスナーがクリックした位置に丸を増やす、最大で10くらい
 //文字をクリックすると蝶が出るとか発行するとか、斜めに横切るとか
