@@ -2,6 +2,8 @@ const { Player } = TextAliveApp;
 
 let songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 let isAnimation = false;
+let isFirstPlay = true;
+let effectCount = 3;
 
 //phrase
 let phraseId = 1;
@@ -48,7 +50,37 @@ const run = () =>{
       player.requestPlay();
     },
 
+    onPlay: () => {
+      if(isFirstPlay){
+        for(var i = 1; i <= effectCount; ++i){
+          let target = "effect-" + i;
+          let targetObj = "#" + target;
+          $(targetObj).addClass(target);
+        }
+        isFirstPlay = false;
+        return;
+      }
+      for(var i = 1; i <= effectCount; ++i){
+        let target = "effect-" + i;
+        let targetObj = "#" + target;
+        $(targetObj).removeClass("animation-pause");
+        $(targetObj).addClass("animation-running");
+      }
+      console.log("再生開始");
+    },
+
+    onPause: () => {
+      for(var i = 1; i <= effectCount; ++i){
+        let target = "effect-" + i;
+        let targetObj = "#" + target;
+        $(targetObj).removeClass("animation-running");
+        $(targetObj).addClass("animation-pause");
+      }
+      console.log("再生停止");
+    },
+
     onTimeUpdate: (position) => {
+
       // 歌詞情報がなければこれで処理を終わる
       if (!player.video.firstChar) {
         return;

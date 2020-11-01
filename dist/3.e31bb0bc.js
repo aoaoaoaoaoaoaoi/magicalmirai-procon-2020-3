@@ -121,7 +121,9 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 var _TextAliveApp = TextAliveApp,
     Player = _TextAliveApp.Player;
 var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
-var isAnimation = false; //phrase
+var isAnimation = false;
+var isFirstPlay = true;
+var effectCount = 3; //phrase
 
 var phraseId = 1;
 var phraseDivArray = [];
@@ -164,6 +166,39 @@ var run = function run() {
       console.log('TimerReady');
       $('#text').html('');
       player.requestPlay();
+    },
+    onPlay: function onPlay() {
+      if (isFirstPlay) {
+        for (var i = 1; i <= effectCount; ++i) {
+          var target = "effect-" + i;
+          var targetObj = "#" + target;
+          $(targetObj).addClass(target);
+        }
+
+        isFirstPlay = false;
+        return;
+      }
+
+      for (var i = 1; i <= effectCount; ++i) {
+        var _target = "effect-" + i;
+
+        var _targetObj = "#" + _target;
+
+        $(_targetObj).removeClass("animation-pause");
+        $(_targetObj).addClass("animation-running");
+      }
+
+      console.log("再生開始");
+    },
+    onPause: function onPause() {
+      for (var i = 1; i <= effectCount; ++i) {
+        var target = "effect-" + i;
+        var targetObj = "#" + target;
+        $(targetObj).removeClass("animation-running");
+        $(targetObj).addClass("animation-pause");
+      }
+
+      console.log("再生停止");
     },
     onTimeUpdate: function onTimeUpdate(position) {
       // 歌詞情報がなければこれで処理を終わる
@@ -345,7 +380,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54190" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56071" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
