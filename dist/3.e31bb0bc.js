@@ -191,6 +191,13 @@ var run = function run() {
         $(_targetObj).addClass("animation-running");
       }
 
+      for (var i = wordDivArray.length - 1; 0 <= i; --i) {
+        if (wordDivArray[i] == null) break; //div自体が消えても残ってるっぽい
+
+        wordDivArray[i].classList.remove("animation-pause");
+        wordDivArray[i].classList.add("animation-running");
+      }
+
       console.log("再生開始");
     },
     onPause: function onPause() {
@@ -199,6 +206,14 @@ var run = function run() {
         var targetObj = "#" + target;
         $(targetObj).removeClass("animation-running");
         $(targetObj).addClass("animation-pause");
+      }
+
+      for (var i = wordDivArray.length - 1; 0 <= i; --i) {
+        console.log("aa");
+        if (wordDivArray[i] == null) break;
+        console.log("aaa");
+        wordDivArray[i].classList.remove("animation-running");
+        wordDivArray[i].classList.add("animation-pause");
       }
 
       console.log("再生停止");

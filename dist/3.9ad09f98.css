@@ -39,14 +39,6 @@ body{
     animation: effect3 1s ease-out forwards infinite;
 }
 
-.animation-pause{
-    animation-play-state: paused;
-}
-
-.animation-running{
-    animation-play-state: running;
-}
-
 .display-none{
     display: none;
 }
@@ -58,6 +50,14 @@ body{
 #text > div > div {
     animation: showLyrics 0.1s ease-out forwards, moveLyrics 100s infinite linear;
     display: inline-block;
+}
+
+.animation-pause{
+    animation-play-state: paused !important;
+}
+
+.animation-running{
+    animation-play-state: running !important;
 }
 
 #text > div {
