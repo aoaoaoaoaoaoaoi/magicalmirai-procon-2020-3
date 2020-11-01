@@ -16,9 +16,12 @@ let phraseHeightDecrease = [];
 let phraseIds = [];
 
 let wordsArray = [];
+let wordDivArray = [];
 let currentPosition = 0;
 
 const run = () =>{
+  $('#loading').removeClass("display-none");
+
   //初期化処理
   $('#info').empty();
   $('#media').empty();
@@ -39,7 +42,6 @@ const run = () =>{
     onVideoReady: (v) => {
       console.log('VideoReady');
       let infoContents = '';
-      $('#text').html('[再生準備待機中]');
     },
 
     // 再生準備完了後、呼ばれる
@@ -52,6 +54,7 @@ const run = () =>{
 
     onPlay: () => {
       if(isFirstPlay){
+        $('#loading').addClass("display-none");
         for(var i = 1; i <= effectCount; ++i){
           let target = "effect-" + i;
           let targetObj = "#" + target;
@@ -132,6 +135,7 @@ const setMakeWords = () => {
   copy.forEach((item, index) => {
     if(item.startTime < currentPosition + 500){
       const wordDiv = document.createElement("div");
+      wordDivArray.push(wordDiv);
       let word = wordsArray.shift();
       let isNoun = word.pos === "N";//名詞
       let charas = word.children;
@@ -211,6 +215,7 @@ const setDeletePhrase = () => {
         phraseMoveForHeight.splice(index, 1);
         phraseIds.splice(index, 1);
         phraseHeightDecrease.splice(index, 1);
+        phraseDiv.remove();
       }
     }
   });

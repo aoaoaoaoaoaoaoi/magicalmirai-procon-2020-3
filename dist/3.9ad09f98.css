@@ -47,6 +47,14 @@ body{
     animation-play-state: running;
 }
 
+.display-none{
+    display: none;
+}
+
+#loading{
+    font-size: 50px;
+}
+
 #text > div > div {
     animation: showLyrics 0.1s ease-out forwards, moveLyrics 100s infinite linear;
     display: inline-block;

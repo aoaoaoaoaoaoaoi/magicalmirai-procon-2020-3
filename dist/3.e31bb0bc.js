@@ -135,10 +135,12 @@ var phraseMoveForHeight = []; //cssでheightを0にする時間に依存
 var phraseHeightDecrease = [];
 var phraseIds = [];
 var wordsArray = [];
+var wordDivArray = [];
 var currentPosition = 0;
 
 var run = function run() {
-  //初期化処理
+  $('#loading').removeClass("display-none"); //初期化処理
+
   $('#info').empty();
   $('#media').empty();
   var player = new Player({
@@ -158,7 +160,6 @@ var run = function run() {
     onVideoReady: function onVideoReady(v) {
       console.log('VideoReady');
       var infoContents = '';
-      $('#text').html('[再生準備待機中]');
     },
     // 再生準備完了後、呼ばれる
     // これ以降、requestPlay()等が実行可能
@@ -169,6 +170,8 @@ var run = function run() {
     },
     onPlay: function onPlay() {
       if (isFirstPlay) {
+        $('#loading').addClass("display-none");
+
         for (var i = 1; i <= effectCount; ++i) {
           var target = "effect-" + i;
           var targetObj = "#" + target;
@@ -257,6 +260,7 @@ var setMakeWords = function setMakeWords() {
   copy.forEach(function (item, index) {
     if (item.startTime < currentPosition + 500) {
       var wordDiv = document.createElement("div");
+      wordDivArray.push(wordDiv);
       var word = wordsArray.shift();
       var isNoun = word.pos === "N"; //名詞
 
@@ -343,6 +347,7 @@ var setDeletePhrase = function setDeletePhrase() {
         phraseMoveForHeight.splice(index, 1);
         phraseIds.splice(index, 1);
         phraseHeightDecrease.splice(index, 1);
+        phraseDiv.remove();
       }
     }
   });
