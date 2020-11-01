@@ -19,18 +19,21 @@ let wordsArray = [];
 let wordDivArray = [];
 let currentPosition = 0;
 
+let c;
+let lyricId = 1;//TODO：初めから再生した時に数をリセットする必要がある
+
+const player = new Player({ app: true , mediaElement: document.querySelector('#media')});
+
 const run = () =>{
   $('#loading').removeClass("display-none");
 
   //初期化処理
-  $('#info').empty();
-  $('#media').empty();
+  //$('#info').empty();
+  //$('#media').empty();
 
-  const player = new Player({ app: true , mediaElement: document.querySelector('#media')});
-  console.log('Run');
+  //console.log('Run');
+}
 
-  let c;
-  let lyricId = 1;
   player.addListener({
     onAppReady: (app) => {
       console.log('AppReady');
@@ -49,7 +52,7 @@ const run = () =>{
     onTimerReady: () => {
       console.log('TimerReady');
       $('#text').html('');
-      player.requestPlay();
+      player.requestPlay();//位置をボタンを押してからに変更
     },
 
     onPlay: () => {
@@ -132,7 +135,6 @@ const run = () =>{
     },
   
   });
-}
 
 const update = () =>{
   let delay = 1000 / 50; // 1 秒で 50 フレーム
@@ -158,7 +160,7 @@ const setMakeWords = () => {
       }
         //演出
         if(isNoun){
-wordDiv.classList.add("noun_text");
+          wordDiv.classList.add("noun_text");
 
           const pSpan = document.createElement("span");
           pSpan.innerHTML = "★";
@@ -235,7 +237,6 @@ const setDeletePhrase = () => {
 
 window.run = run
 
-//音楽再生中のみ、丸が出てくるようにする
 //サビはフィーバータイムなので丸の数が増えます
 //リスナーがクリックした位置に丸を増やす、最大で10くらい
 //文字をクリックすると蝶が出るとか発行するとか、斜めに横切るとか
