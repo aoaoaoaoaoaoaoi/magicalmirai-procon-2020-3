@@ -29,6 +29,16 @@ const run = () =>{
   player.requestPlay();
 }
 
+const pause = () =>{
+  //$('#loading').removeClass("display-none");
+  //player.requestPlay();
+}
+
+const stop = () =>{
+  //$('#loading').removeClass("display-none");
+  //player.requestPlay();
+}
+
 player.addListener({
   onAppReady: (app) => {
     console.log('AppReady');

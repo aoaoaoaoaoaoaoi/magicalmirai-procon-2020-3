@@ -19,7 +19,6 @@
         ●
       </div>
     </div>
-    <button id="run-button" disabled="" onclick="run()">Run</button>
     <div id="contents">
       <div id="text">
         <div id="loading" class="display-none">
@@ -27,6 +26,33 @@
         </div>
       </div>
     </div>
+
+    <div id="info">
+      <div id="controller">     
+        <button id="run-button" disabled="" onclick="run()">
+          <div class="kakomi">
+            <div class="kakomi-text">
+              ▶
+            </div>
+          </div>
+        </button>     
+        <button id="pause-button" disabled="" onclick="pause()">
+          <div class="kakomi">
+            <div class="kakomi-text">
+              ❙❙
+            </div>
+          </div>
+        </button>
+        <button id="stop-button" disabled="" onclick="stop()">
+          <div class="kakomi">
+            <div class="kakomi-text">
+              ■
+            </div>
+          </div>
+        </button>   
+      </div>
+    </div>
+    
     <div id="media"></div>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

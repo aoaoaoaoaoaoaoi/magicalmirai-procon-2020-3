@@ -150,6 +150,14 @@ var run = function run() {
   player.requestPlay();
 };
 
+var pause = function pause() {//$('#loading').removeClass("display-none");
+  //player.requestPlay();
+};
+
+var stop = function stop() {//$('#loading').removeClass("display-none");
+  //player.requestPlay();
+};
+
 player.addListener({
   onAppReady: function onAppReady(app) {
     console.log('AppReady');
