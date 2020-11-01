@@ -168,6 +168,8 @@ player.addListener({
   onVideoReady: function onVideoReady(v) {
     console.log('VideoReady');
     var infoContents = '';
+    $("#song-name").html(player.data.song.name);
+    $("#song-artist").html(player.data.song.artist.name);
   },
   // 再生準備完了後、呼ばれる
   // これ以降、requestPlay()等が実行可能

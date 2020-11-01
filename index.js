@@ -50,6 +50,8 @@ player.addListener({
   onVideoReady: (v) => {
     console.log('VideoReady');
     let infoContents = '';
+    $("#song-name").html(player.data.song.name);
+    $("#song-artist").html(player.data.song.artist.name);
   },
 
   // 再生準備完了後、呼ばれる

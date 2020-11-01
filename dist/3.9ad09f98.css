@@ -12,10 +12,11 @@ body{
     bottom: 0;
 }
 
-#info{
+#song{
     position: fixed;
     bottom: 0;
     right:0;
+    color:black;
 }
 
 .kakomi{
