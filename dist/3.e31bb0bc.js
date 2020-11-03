@@ -148,7 +148,6 @@ var player = new Player({
 
 var run = function run() {
   player.requestPlay();
-  changeCtrlStateByPlay();
 };
 
 var changeCtrlStateByPlay = function changeCtrlStateByPlay() {
@@ -157,11 +156,14 @@ var changeCtrlStateByPlay = function changeCtrlStateByPlay() {
   $('#stop-button').removeClass("display-none");
 };
 
-var pause = function pause() {
-  player.requestPause();
+var changeCtrlStateByPause = function changeCtrlStateByPause() {
   $('#pause-button').addClass("display-none");
   $('#run-button').removeClass("display-none");
   $('#stop-button').removeClass("display-none");
+};
+
+var pause = function pause() {
+  player.requestPause();
 };
 
 var stop = function stop() {
@@ -195,23 +197,16 @@ player.addListener({
     changeCtrlStateByPlay();
 
     if (isFirstPlay) {
-      for (var i = 1; i <= effectCount; ++i) {
-        var target = "effect-" + i;
-        var targetObj = "#" + target;
-        $(targetObj).addClass(target);
-      }
-
+      $("#background-object-effect").removeClass("display-none");
       isFirstPlay = false;
       return;
     }
 
     for (var i = 1; i <= effectCount; ++i) {
-      var _target = "effect-" + i;
-
-      var _targetObj = "#" + _target;
-
-      $(_targetObj).removeClass("animation-pause");
-      $(_targetObj).addClass("animation-running");
+      var target = "effect-" + i;
+      var targetObj = "#" + target;
+      $(targetObj).removeClass("animation-pause");
+      $(targetObj).addClass("animation-running");
     }
 
     for (var i = wordDivArray.length - 1; 0 <= i; --i) {
@@ -224,6 +219,8 @@ player.addListener({
     console.log("再生開始");
   },
   onPause: function onPause() {
+    changeCtrlStateByPause();
+
     for (var i = 1; i <= effectCount; ++i) {
       var target = "effect-" + i;
       var targetObj = "#" + target;
@@ -404,9 +401,7 @@ var reset = function reset() {
       continue;
     }
 
-    $(targetObj).removeClass(target);
-    $(targetObj).removeClass("animation-pause");
-    $(targetObj).removeClass("animation-running");
+    $("#background-object-effect").addClass("display-none");
   }
 
   isAnimation = false;
@@ -461,7 +456,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50659" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64220" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

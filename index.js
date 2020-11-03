@@ -27,7 +27,6 @@ const player = new Player({ app: true , mediaElement: document.querySelector('#m
 
 const run = () =>{
   player.requestPlay();
-  changeCtrlStateByPlay();
 }
 
 const changeCtrlStateByPlay = () =>{
@@ -36,11 +35,14 @@ const changeCtrlStateByPlay = () =>{
   $('#stop-button').removeClass("display-none");
 }
 
-const pause = () =>{
-  player.requestPause();
+const changeCtrlStateByPause = () =>{
   $('#pause-button').addClass("display-none");
   $('#run-button').removeClass("display-none");
   $('#stop-button').removeClass("display-none");
+}
+
+const pause = () =>{
+  player.requestPause();
 }
 
 const stop = () =>{
@@ -76,11 +78,7 @@ player.addListener({
   onPlay: () => {
     changeCtrlStateByPlay();
     if(isFirstPlay){
-      for(var i = 1; i <= effectCount; ++i){
-        let target = "effect-" + i;
-        let targetObj = "#" + target;
-        $(targetObj).addClass(target);
-      }
+      $("#background-object-effect").removeClass("display-none");
       isFirstPlay = false;
       return;
     }
@@ -99,6 +97,7 @@ player.addListener({
   },
 
   onPause: () => {
+    changeCtrlStateByPause();
     for(var i = 1; i <= effectCount; ++i){
       let target = "effect-" + i;
       let targetObj = "#" + target;
@@ -267,9 +266,7 @@ const reset = () =>{
    $(targetObj).remove();
    continue;
   }
-  $(targetObj).removeClass(target);
-  $(targetObj).removeClass("animation-pause");
-  $(targetObj).removeClass("animation-running");
+  $("#background-object-effect").addClass("display-none");
 }
 
  isAnimation = false;
