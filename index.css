@@ -46,6 +46,11 @@ button{
     height: 30px;
 }
 
+.stop-button{
+    position: relative;
+    top: -4px;
+}
+
 #background-effect{
     background-color: #000000;
     opacity: 0.5;
