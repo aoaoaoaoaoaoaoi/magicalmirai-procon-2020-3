@@ -123,6 +123,7 @@ var _TextAliveApp = TextAliveApp,
 var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 var isAnimation = false;
 var isFirstPlay = true;
+var isStop = false;
 var effectCount = 3;
 var timer; //phrase
 
@@ -164,9 +165,11 @@ var changeCtrlStateByPause = function changeCtrlStateByPause() {
 
 var pause = function pause() {
   player.requestPause();
+  changeCtrlStateByPause();
 };
 
 var stop = function stop() {
+  isStop = true;
   player.requestStop();
   reset();
   $('#run-button').removeClass("display-none");
@@ -197,6 +200,7 @@ player.addListener({
     changeCtrlStateByPlay();
 
     if (isFirstPlay) {
+      console.log("1");
       $("#background-object-effect").removeClass("display-none");
       isFirstPlay = false;
       return;
@@ -219,7 +223,9 @@ player.addListener({
     console.log("再生開始");
   },
   onPause: function onPause() {
-    changeCtrlStateByPause();
+    if (isStop) {
+      return;
+    }
 
     for (var i = 1; i <= effectCount; ++i) {
       var target = "effect-" + i;
@@ -392,6 +398,8 @@ var reset = function reset() {
   clearInterval(timer);
   timer = null; //TODO:3つに戻す
 
+  console.log("3");
+
   for (var i = 1; i <= effectCount; ++i) {
     var target = "effect-" + i;
     var targetObj = "#" + target;
@@ -401,9 +409,11 @@ var reset = function reset() {
       continue;
     }
 
-    $("#background-object-effect").addClass("display-none");
+    $(targetObj).removeClass("animation-pause");
+    $(targetObj).addClass("animation-running");
   }
 
+  $("#background-object-effect").addClass("display-none");
   isAnimation = false;
   isFirstPlay = true;
   effectCount = 3;

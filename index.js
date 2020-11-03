@@ -3,6 +3,7 @@ const { Player } = TextAliveApp;
 let songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
 let isAnimation = false;
 let isFirstPlay = true;
+let isStop = false;
 let effectCount = 3;
 let timer;
 
@@ -43,9 +44,11 @@ const changeCtrlStateByPause = () =>{
 
 const pause = () =>{
   player.requestPause();
+  changeCtrlStateByPause();
 }
 
 const stop = () =>{
+  isStop = true;
   player.requestStop();
   reset();
   $('#run-button').removeClass("display-none");
@@ -78,6 +81,7 @@ player.addListener({
   onPlay: () => {
     changeCtrlStateByPlay();
     if(isFirstPlay){
+      console.log("1");
       $("#background-object-effect").removeClass("display-none");
       isFirstPlay = false;
       return;
@@ -97,7 +101,9 @@ player.addListener({
   },
 
   onPause: () => {
-    changeCtrlStateByPause();
+    if(isStop){
+      return;
+    }
     for(var i = 1; i <= effectCount; ++i){
       let target = "effect-" + i;
       let targetObj = "#" + target;
@@ -259,6 +265,7 @@ const reset = () =>{
  timer = null;
 
  //TODO:3つに戻す
+ console.log("3");
  for(var i = 1; i <= effectCount; ++i){
   let target = "effect-" + i;
   let targetObj = "#" + target;
@@ -266,8 +273,11 @@ const reset = () =>{
    $(targetObj).remove();
    continue;
   }
-  $("#background-object-effect").addClass("display-none");
+  $(targetObj).removeClass("animation-pause");
+  $(targetObj).addClass("animation-running");
 }
+
+$("#background-object-effect").addClass("display-none");
 
  isAnimation = false;
  isFirstPlay = true;
