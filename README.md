@@ -6,7 +6,7 @@
 https://www.youtube.com/watch?v=a-Nf3QUFkOU&feature=emb_logo
 
 # ビルドについて
-ビルドツールは必要です。
+ビルドツールは必要です。<br>
 開発にはParcelを使用しました。
 
 # アピールポイント
