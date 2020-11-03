@@ -132,16 +132,14 @@ var phraseDivArray = [];
 var phraseArray = [];
 var phraseDivArrayForDelete = [];
 var PhraseDivMoveTimesArray = [];
-var phraseMoveForHeight = []; //cssでheightを0にする時間に依存
-
+var phraseMoveForHeight = [];
 var phraseHeightDecrease = [];
 var phraseIds = [];
 var wordsArray = [];
 var wordDivArray = [];
 var currentPosition = 0;
 var c;
-var lyricId = 1; //TODO：初めから再生した時に数をリセットする必要がある
-
+var lyricId = 1;
 var player = new Player({
   app: true,
   mediaElement: document.querySelector('#media')
@@ -178,27 +176,19 @@ var stop = function stop() {
 
 player.addListener({
   onAppReady: function onAppReady(app) {
-    console.log('AppReady');
     player.createFromSongUrl(songUrl);
   },
-  // 楽曲情報読み込み完了後、呼ばれる
-  // この時点ではrequestPlay()等が実行不能
   onVideoReady: function onVideoReady(v) {
-    console.log('VideoReady');
     $("#song-name").html(player.data.song.name);
     $("#song-artist").html(player.data.song.artist.name);
   },
-  // 再生準備完了後、呼ばれる
-  // これ以降、requestPlay()等が実行可能
   onTimerReady: function onTimerReady() {
-    console.log('TimerReady');
     $('#text').empty();
     $("#run-button").prop("disabled", false);
   },
   onPlay: function onPlay() {
     isStop = false;
     changeCtrlStateByPlay();
-    console.log("再生開始");
 
     if (isFirstPlay) {
       $("#background-object-effect").removeClass("display-none");
@@ -214,20 +204,16 @@ player.addListener({
     }
 
     for (var i = wordDivArray.length - 1; 0 <= i; --i) {
-      if (wordDivArray[i] == null) break; //div自体が消えても残ってるっぽい
-
+      if (wordDivArray[i] == null) break;
       wordDivArray[i].classList.remove("animation-pause");
       wordDivArray[i].classList.add("animation-running");
     }
-
-    console.log("再生開始");
   },
   onPause: function onPause() {
     if (isStop) {
       return;
     }
 
-    console.log("pause");
     changeCtrlStateByPause();
 
     for (var i = 1; i <= effectCount; ++i) {
@@ -242,11 +228,8 @@ player.addListener({
       wordDivArray[i].classList.remove("animation-running");
       wordDivArray[i].classList.add("animation-pause");
     }
-
-    console.log("再生停止");
   },
   onTimeUpdate: function onTimeUpdate(position) {
-    // 歌詞情報がなければこれで処理を終わる
     if (!player.video.firstChar || isStop) {
       return;
     }
@@ -296,6 +279,15 @@ var update = function update() {
   }, delay);
 };
 
+var setParticle = function setParticle(wordDiv, animNum) {
+  var span = document.createElement("span");
+  span.innerHTML = "★";
+  span.classList.add('text_particle');
+  var className = 'text_particle_anim_' + animNum;
+  span.classList.add(className);
+  wordDiv.appendChild(span);
+};
+
 var setMakeWords = function setMakeWords() {
   var copy = wordsArray;
   copy.forEach(function (item, index) {
@@ -316,21 +308,9 @@ var setMakeWords = function setMakeWords() {
 
       if (isNoun) {
         wordDiv.classList.add("noun_text");
-        var pSpan = document.createElement("span");
-        pSpan.innerHTML = "★";
-        pSpan.classList.add('text_particle');
-        pSpan.classList.add('text_particle_anim_0');
-        wordDiv.appendChild(pSpan);
-        var pSpan45 = document.createElement("span");
-        pSpan45.innerHTML = "★";
-        pSpan45.classList.add('text_particle');
-        pSpan45.classList.add('text_particle_anim_45');
-        wordDiv.appendChild(pSpan45);
-        var pSpan225 = document.createElement("span");
-        pSpan45.innerHTML = "★";
-        pSpan45.classList.add('text_particle');
-        pSpan45.classList.add('text_particle_anim_225');
-        wordDiv.appendChild(pSpan225);
+        setParticle(wordDiv, 0);
+        setParticle(wordDiv, 45);
+        setParticle(wordDiv, 225);
       }
 
       phraseDivArray[0].appendChild(wordDiv);
@@ -343,7 +323,6 @@ var setMakeWords = function setMakeWords() {
 };
 
 var setDeletePhrase = function setDeletePhrase() {
-  //500ms
   var move = 8;
   var copy = phraseArray;
   copy.forEach(function (item, index) {
@@ -355,7 +334,7 @@ var setDeletePhrase = function setDeletePhrase() {
         var currentHeight = parseInt($(selecter).height());
         phraseDiv.classList.add('fadeLyric');
         phraseHeightDecrease[index] = currentHeight / 10;
-        phraseMoveForHeight[index] = currentHeight / 2 / 10; //cssで200ms,updateが20msに一度処理
+        phraseMoveForHeight[index] = currentHeight / 2 / 10;
       }
 
       var currentPos = parseInt(phraseDiv.style.top);
@@ -398,11 +377,6 @@ var reset = function reset() {
   $('#text').empty();
   clearInterval(timer);
   timer = null;
-  /*timer = setInterval(function() {
-    clearInterval(timer);
-    timer = null;
-    $('#text').empty();
-  }, 100)*/
 
   for (var i = 1; i <= effectCount; ++i) {
     var target = "effect-" + i;
@@ -461,7 +435,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64220" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62153" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

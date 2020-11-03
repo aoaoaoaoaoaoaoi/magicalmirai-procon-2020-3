@@ -13,7 +13,7 @@ let phraseDivArray = [];
 let phraseArray = [];
 let phraseDivArrayForDelete = [];
 let PhraseDivMoveTimesArray = [];
-let phraseMoveForHeight = []; //cssでheightを0にする時間に依存
+let phraseMoveForHeight = [];
 let phraseHeightDecrease = [];
 let phraseIds = [];
 
@@ -22,7 +22,7 @@ let wordDivArray = [];
 let currentPosition = 0;
 
 let c;
-let lyricId = 1;//TODO：初めから再生した時に数をリセットする必要がある
+let lyricId = 1;
 
 const player = new Player({ app: true , mediaElement: document.querySelector('#media')});
 
@@ -57,22 +57,15 @@ const stop = () =>{
 
 player.addListener({
   onAppReady: (app) => {
-    console.log('AppReady');
     player.createFromSongUrl(songUrl);
   },
 
-  // 楽曲情報読み込み完了後、呼ばれる
-  // この時点ではrequestPlay()等が実行不能
   onVideoReady: (v) => {
-    console.log('VideoReady');
     $("#song-name").html(player.data.song.name);
     $("#song-artist").html(player.data.song.artist.name);
   },
 
-  // 再生準備完了後、呼ばれる
-  // これ以降、requestPlay()等が実行可能
   onTimerReady: () => {
-    console.log('TimerReady');
     $('#text').empty();
     $("#run-button").prop("disabled", false);
   },
@@ -80,7 +73,6 @@ player.addListener({
   onPlay: () => {
     isStop = false;
     changeCtrlStateByPlay();
-    console.log("再生開始");
     if(isFirstPlay){
       $("#background-object-effect").removeClass("display-none");
       isFirstPlay = false;
@@ -93,18 +85,16 @@ player.addListener({
       $(targetObj).addClass("animation-running");
     }
     for(var i = wordDivArray.length - 1; 0 <= i; --i){
-      if(wordDivArray[i] == null) break; //div自体が消えても残ってるっぽい
+      if(wordDivArray[i] == null) break;
       wordDivArray[i].classList.remove("animation-pause");
       wordDivArray[i].classList.add("animation-running");
     }
-    console.log("再生開始");
   },
 
   onPause: () => {
     if(isStop){
       return;
     }
-    console.log("pause");
     changeCtrlStateByPause();
     for(var i = 1; i <= effectCount; ++i){
       let target = "effect-" + i;
@@ -117,12 +107,9 @@ player.addListener({
       wordDivArray[i].classList.remove("animation-running");
       wordDivArray[i].classList.add("animation-pause");
     }
-    console.log("再生停止");
   },
 
   onTimeUpdate: (position) => {
-
-    // 歌詞情報がなければこれで処理を終わる
     if (!player.video.firstChar || isStop) {
       return;
     }
@@ -167,6 +154,15 @@ const update = () =>{
 }, delay)
 };
 
+const setParticle = (wordDiv, animNum) =>{
+  const span = document.createElement("span");
+  span.innerHTML = "★";
+  span.classList.add('text_particle');
+  let className = 'text_particle_anim_' + animNum;
+  span.classList.add(className);
+  wordDiv.appendChild(span);
+}
+
 const setMakeWords = () => {
   let copy = wordsArray;
   copy.forEach((item, index) => {
@@ -184,24 +180,9 @@ const setMakeWords = () => {
         //演出
         if(isNoun){
           wordDiv.classList.add("noun_text");
-
-          const pSpan = document.createElement("span");
-          pSpan.innerHTML = "★";
-          pSpan.classList.add('text_particle');
-          pSpan.classList.add('text_particle_anim_0');
-          wordDiv.appendChild(pSpan);
-
-          const pSpan45 = document.createElement("span");
-          pSpan45.innerHTML = "★";
-          pSpan45.classList.add('text_particle');
-          pSpan45.classList.add('text_particle_anim_45');
-          wordDiv.appendChild(pSpan45);
-
-          const pSpan225 = document.createElement("span");
-          pSpan45.innerHTML = "★";
-          pSpan45.classList.add('text_particle');
-          pSpan45.classList.add('text_particle_anim_225');
-          wordDiv.appendChild(pSpan225);
+          setParticle(wordDiv, 0);
+          setParticle(wordDiv, 45);
+          setParticle(wordDiv, 225);
         }
 
       phraseDivArray[0].appendChild(wordDiv);
@@ -213,7 +194,6 @@ const setMakeWords = () => {
 };
 
 const setDeletePhrase = () => {
-  //500ms
   let move = 8;
   let copy = phraseArray;
   copy.forEach((item, index) => {
@@ -225,7 +205,7 @@ const setDeletePhrase = () => {
         let currentHeight = parseInt($(selecter).height());
         phraseDiv.classList.add('fadeLyric');
         phraseHeightDecrease[index] = currentHeight / 10;
-        phraseMoveForHeight[index] = (currentHeight / 2) / 10;//cssで200ms,updateが20msに一度処理
+        phraseMoveForHeight[index] = (currentHeight / 2) / 10;
       }
 
       let currentPos = parseInt(phraseDiv.style.top);
@@ -263,11 +243,6 @@ const reset = () =>{
   $('#text').empty();
   clearInterval(timer);
   timer = null;
-  /*timer = setInterval(function() {
-    clearInterval(timer);
-    timer = null;
-    $('#text').empty();
-  }, 100)*/
 
  for(var i = 1; i <= effectCount; ++i){
   let target = "effect-" + i;
