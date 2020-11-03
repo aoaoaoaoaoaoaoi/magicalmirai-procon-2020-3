@@ -196,7 +196,9 @@ player.addListener({
     $("#run-button").prop("disabled", false);
   },
   onPlay: function onPlay() {
+    isStop = false;
     changeCtrlStateByPlay();
+    console.log("再生開始");
 
     if (isFirstPlay) {
       $("#background-object-effect").removeClass("display-none");
@@ -222,7 +224,6 @@ player.addListener({
   },
   onPause: function onPause() {
     if (isStop) {
-      isStop = false;
       return;
     }
 
@@ -246,7 +247,7 @@ player.addListener({
   },
   onTimeUpdate: function onTimeUpdate(position) {
     // 歌詞情報がなければこれで処理を終わる
-    if (!player.video.firstChar) {
+    if (!player.video.firstChar || isStop) {
       return;
     }
 
@@ -393,83 +394,19 @@ var setDeletePhrase = function setDeletePhrase() {
   });
 };
 
-var getRandomIntegerNum = function getRandomIntegerNum(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-};
-
-var getRandomDecimalNum = function getRandomDecimalNum(min, max) {
-  return Math.random() * (max - min) + min;
-};
-/*$('#background-effect').on('click',function(e){
-  let pageX = e.clientX; 
-  let pageY = e.clientY;
-  const div = document.createElement("div");
-  let id = "effect-" + ( ++effectCount );
-  div.id = id;
-  div.position = "fixed";
-  div.left = pageX;
-  div.top = pageY;
-  div.opacity = 0.7
-  div.innerHTML = "●";
-  let size = getRandomIntegerNum(50, 351) + "px";
-  div.style.fontSize = size + "px";
-  let time = getRandomIntegerNum(500, 3500);
-  let selecter = "#" + id;
-  console.log(selecter);
-  $(selecter).animate({
-    'opacity': 0,
-    'left': '50%',
-    'top': '50%',
-    'font-size': '0px',
-  }, time);
-  $('#background-object-effect').append(div);
-});*/
-
-/*const makeEffect = (e) =>{
-  console.log("click");
-  console.log(e);
-  let pageX = e.clientX; 
-  let pageY = e.y;
-  const div = document.createElement("div");
-  let id = "effect-" + ( ++effectCount );
-  div.id = id;
-  div.position = "fixed";
-  div.left = pageX;
-  div.top = pageY;
-  div.opacity = 0.7
-  div.innerHTML = "●";
-  let size = getRandomIntegerNum(50, 351);
-  div.style.fontSize = "size" + "px";
-  let time = getRandomIntegerNum(500, 3500);
-  let selecter = "#" + id;
-  $(selecter).animate({
-    'opacity': 0,
-    'left': '50%',
-    'top': '50%',
-    'font-size': '0px',
-  }, time);
-  $('#background-object-effect').append(div);
-}*/
-
-
 var reset = function reset() {
+  $('#text').empty();
   clearInterval(timer);
   timer = null;
-  timer = setInterval(function () {
+  /*timer = setInterval(function() {
     clearInterval(timer);
     timer = null;
     $('#text').empty();
-  }, 100);
+  }, 100)*/
 
   for (var i = 1; i <= effectCount; ++i) {
     var target = "effect-" + i;
     var targetObj = "#" + target;
-
-    if (3 < i) {
-      $(targetObj).remove();
-      continue;
-    }
-
     $(targetObj).removeClass("animation-pause");
     $(targetObj).addClass("animation-running");
   }
@@ -495,10 +432,7 @@ var reset = function reset() {
 
 window.run = run;
 window.pause = pause;
-window.stop = stop; //window.makeEffect = makeEffect
-//サビはフィーバータイムなので丸の数が増えます
-//リスナーがクリックした位置に丸を増やす、最大で10くらい
-//文字をクリックすると蝶が出るとか発行するとか、斜めに横切るとか
+window.stop = stop;
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
