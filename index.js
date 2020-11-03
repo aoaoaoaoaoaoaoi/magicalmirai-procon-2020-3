@@ -44,7 +44,6 @@ const changeCtrlStateByPause = () =>{
 
 const pause = () =>{
   player.requestPause();
-  changeCtrlStateByPause();
 }
 
 const stop = () =>{
@@ -81,7 +80,6 @@ player.addListener({
   onPlay: () => {
     changeCtrlStateByPlay();
     if(isFirstPlay){
-      console.log("1");
       $("#background-object-effect").removeClass("display-none");
       isFirstPlay = false;
       return;
@@ -102,8 +100,11 @@ player.addListener({
 
   onPause: () => {
     if(isStop){
+      isStop = false;
       return;
     }
+    console.log("pause");
+    changeCtrlStateByPause();
     for(var i = 1; i <= effectCount; ++i){
       let target = "effect-" + i;
       let targetObj = "#" + target;
@@ -111,9 +112,7 @@ player.addListener({
       $(targetObj).addClass("animation-pause");
     }
     for(var i = wordDivArray.length - 1; 0 <= i; --i){
-      console.log("aa");
       if(wordDivArray[i] == null) break;
-      console.log("aaa");
       wordDivArray[i].classList.remove("animation-running");
       wordDivArray[i].classList.add("animation-pause");
     }
@@ -258,14 +257,74 @@ const setDeletePhrase = () => {
   });
 };
 
+const getRandomIntegerNum = (min, max) =>{
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+const getRandomDecimalNum = (min, max) =>{
+  return Math.random() * (max - min) + min;
+}
+
+/*$('#background-effect').on('click',function(e){
+  let pageX = e.clientX; 
+  let pageY = e.clientY;
+  const div = document.createElement("div");
+  let id = "effect-" + ( ++effectCount );
+  div.id = id;
+  div.position = "fixed";
+  div.left = pageX;
+  div.top = pageY;
+  div.opacity = 0.7
+  div.innerHTML = "●";
+  let size = getRandomIntegerNum(50, 351) + "px";
+  div.style.fontSize = size + "px";
+  let time = getRandomIntegerNum(500, 3500);
+  let selecter = "#" + id;
+  console.log(selecter);
+  $(selecter).animate({
+    'opacity': 0,
+    'left': '50%',
+    'top': '50%',
+    'font-size': '0px',
+  }, time);
+  $('#background-object-effect').append(div);
+});*/ 
+
+/*const makeEffect = (e) =>{
+  console.log("click");
+  console.log(e);
+  let pageX = e.clientX; 
+  let pageY = e.y;
+  const div = document.createElement("div");
+  let id = "effect-" + ( ++effectCount );
+  div.id = id;
+  div.position = "fixed";
+  div.left = pageX;
+  div.top = pageY;
+  div.opacity = 0.7
+  div.innerHTML = "●";
+  let size = getRandomIntegerNum(50, 351);
+  div.style.fontSize = "size" + "px";
+  let time = getRandomIntegerNum(500, 3500);
+  let selecter = "#" + id;
+  $(selecter).animate({
+    'opacity': 0,
+    'left': '50%',
+    'top': '50%',
+    'font-size': '0px',
+  }, time);
+  $('#background-object-effect').append(div);
+}*/
+
 const reset = () =>{
-  $('#text').empty();
+  clearInterval(timer);
+  timer = null;
+  timer = setInterval(function() {
+    clearInterval(timer);
+    timer = null;
+    $('#text').empty();
+  }, 100)
 
- clearInterval(timer);
- timer = null;
-
- //TODO:3つに戻す
- console.log("3");
  for(var i = 1; i <= effectCount; ++i){
   let target = "effect-" + i;
   let targetObj = "#" + target;
@@ -303,8 +362,8 @@ $("#background-object-effect").addClass("display-none");
 window.run = run
 window.pause = pause
 window.stop = stop
+//window.makeEffect = makeEffect
 
-//ボタン微妙にバグってる
 //サビはフィーバータイムなので丸の数が増えます
 //リスナーがクリックした位置に丸を増やす、最大で10くらい
 //文字をクリックすると蝶が出るとか発行するとか、斜めに横切るとか

@@ -165,7 +165,6 @@ var changeCtrlStateByPause = function changeCtrlStateByPause() {
 
 var pause = function pause() {
   player.requestPause();
-  changeCtrlStateByPause();
 };
 
 var stop = function stop() {
@@ -200,7 +199,6 @@ player.addListener({
     changeCtrlStateByPlay();
 
     if (isFirstPlay) {
-      console.log("1");
       $("#background-object-effect").removeClass("display-none");
       isFirstPlay = false;
       return;
@@ -224,8 +222,12 @@ player.addListener({
   },
   onPause: function onPause() {
     if (isStop) {
+      isStop = false;
       return;
     }
+
+    console.log("pause");
+    changeCtrlStateByPause();
 
     for (var i = 1; i <= effectCount; ++i) {
       var target = "effect-" + i;
@@ -235,9 +237,7 @@ player.addListener({
     }
 
     for (var i = wordDivArray.length - 1; 0 <= i; --i) {
-      console.log("aa");
       if (wordDivArray[i] == null) break;
-      console.log("aaa");
       wordDivArray[i].classList.remove("animation-running");
       wordDivArray[i].classList.add("animation-pause");
     }
@@ -393,12 +393,73 @@ var setDeletePhrase = function setDeletePhrase() {
   });
 };
 
-var reset = function reset() {
-  $('#text').empty();
-  clearInterval(timer);
-  timer = null; //TODO:3つに戻す
+var getRandomIntegerNum = function getRandomIntegerNum(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+};
 
-  console.log("3");
+var getRandomDecimalNum = function getRandomDecimalNum(min, max) {
+  return Math.random() * (max - min) + min;
+};
+/*$('#background-effect').on('click',function(e){
+  let pageX = e.clientX; 
+  let pageY = e.clientY;
+  const div = document.createElement("div");
+  let id = "effect-" + ( ++effectCount );
+  div.id = id;
+  div.position = "fixed";
+  div.left = pageX;
+  div.top = pageY;
+  div.opacity = 0.7
+  div.innerHTML = "●";
+  let size = getRandomIntegerNum(50, 351) + "px";
+  div.style.fontSize = size + "px";
+  let time = getRandomIntegerNum(500, 3500);
+  let selecter = "#" + id;
+  console.log(selecter);
+  $(selecter).animate({
+    'opacity': 0,
+    'left': '50%',
+    'top': '50%',
+    'font-size': '0px',
+  }, time);
+  $('#background-object-effect').append(div);
+});*/
+
+/*const makeEffect = (e) =>{
+  console.log("click");
+  console.log(e);
+  let pageX = e.clientX; 
+  let pageY = e.y;
+  const div = document.createElement("div");
+  let id = "effect-" + ( ++effectCount );
+  div.id = id;
+  div.position = "fixed";
+  div.left = pageX;
+  div.top = pageY;
+  div.opacity = 0.7
+  div.innerHTML = "●";
+  let size = getRandomIntegerNum(50, 351);
+  div.style.fontSize = "size" + "px";
+  let time = getRandomIntegerNum(500, 3500);
+  let selecter = "#" + id;
+  $(selecter).animate({
+    'opacity': 0,
+    'left': '50%',
+    'top': '50%',
+    'font-size': '0px',
+  }, time);
+  $('#background-object-effect').append(div);
+}*/
+
+
+var reset = function reset() {
+  clearInterval(timer);
+  timer = null;
+  timer = setInterval(function () {
+    clearInterval(timer);
+    timer = null;
+    $('#text').empty();
+  }, 100);
 
   for (var i = 1; i <= effectCount; ++i) {
     var target = "effect-" + i;
@@ -434,7 +495,7 @@ var reset = function reset() {
 
 window.run = run;
 window.pause = pause;
-window.stop = stop; //ボタン微妙にバグってる
+window.stop = stop; //window.makeEffect = makeEffect
 //サビはフィーバータイムなので丸の数が増えます
 //リスナーがクリックした位置に丸を増やす、最大で10くらい
 //文字をクリックすると蝶が出るとか発行するとか、斜めに横切るとか
