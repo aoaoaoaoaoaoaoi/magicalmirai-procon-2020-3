@@ -197,7 +197,6 @@ const setDeletePhrase = () => {
         let currentHeight = parseInt($(selecter).height());
         phraseDiv.classList.add('fadeLyric');
         item.setHeightChangeSize =  (currentHeight / 10);
-        //item.setDistanceToMove = ((currentHeight / 2) / 10);
       }
 
       let currentPos = parseInt(phraseDiv.style.top);
@@ -249,12 +248,6 @@ $("#background-object-effect").addClass("display-none");
  phraseId = 1;
  phraseDivArray = [];
  phraseArray = [];
- //phraseDivArrayForDelete = [];
- //PhraseDivMoveTimesArray = [];
- //phraseMoveForHeight = [];
- //phraseHeightDecrease = [];
- //phraseIds = [];
-
  wordsArray = [];
  wordDivArray = [];
  currentPosition = 0;

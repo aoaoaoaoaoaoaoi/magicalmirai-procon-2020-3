@@ -330,7 +330,7 @@ var setDeletePhrase = function setDeletePhrase() {
         var selecter = "#" + item.id;
         var currentHeight = parseInt($(selecter).height());
         phraseDiv.classList.add('fadeLyric');
-        item.setHeightChangeSize = currentHeight / 10; //item.setDistanceToMove = ((currentHeight / 2) / 10);
+        item.setHeightChangeSize = currentHeight / 10;
       }
 
       var currentPos = parseInt(phraseDiv.style.top);
@@ -385,12 +385,7 @@ var reset = function reset() {
   effectCount = 3;
   phraseId = 1;
   phraseDivArray = [];
-  phraseArray = []; //phraseDivArrayForDelete = [];
-  //PhraseDivMoveTimesArray = [];
-  //phraseMoveForHeight = [];
-  //phraseHeightDecrease = [];
-  //phraseIds = [];
-
+  phraseArray = [];
   wordsArray = [];
   wordDivArray = [];
   currentPosition = 0;
