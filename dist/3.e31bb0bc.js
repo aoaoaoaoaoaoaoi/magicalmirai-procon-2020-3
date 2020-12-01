@@ -118,6 +118,12 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"index.js":[function(require,module,exports) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 var _TextAliveApp = TextAliveApp,
     Player = _TextAliveApp.Player;
 var songUrl = 'https://www.youtube.com/watch?v=a-Nf3QUFkOU';
@@ -130,11 +136,6 @@ var timer; //phrase
 var phraseId = 1;
 var phraseDivArray = [];
 var phraseArray = [];
-var phraseDivArrayForDelete = [];
-var PhraseDivMoveTimesArray = [];
-var phraseMoveForHeight = [];
-var phraseHeightDecrease = [];
-var phraseIds = [];
 var wordsArray = [];
 var wordDivArray = [];
 var currentPosition = 0;
@@ -246,18 +247,14 @@ player.addListener({
 
     while (current && current.startTime < position + 500) {
       if (c !== current) {
-        phraseArray.push(current);
         var phraseDiv = document.createElement("div");
         var currentPhraseId = "phrase_" + phraseId;
         phraseDiv.id = currentPhraseId;
-        phraseIds.push(currentPhraseId);
         phraseDiv.style.position = "relative";
         phraseDiv.style.top = "0px";
         phraseDivArray.push(phraseDiv);
-        phraseDivArrayForDelete.push(phraseDiv);
-        PhraseDivMoveTimesArray.push(0);
-        phraseMoveForHeight.push(0);
-        phraseHeightDecrease.push(0);
+        var phrase = new Phrase(current, currentPhraseId, phraseDiv);
+        phraseArray.push(phrase);
         $('#text').append(phraseDiv);
         var words = current.children;
         Array.prototype.push.apply(wordsArray, words);
@@ -324,29 +321,28 @@ var setMakeWords = function setMakeWords() {
 
 var setDeletePhrase = function setDeletePhrase() {
   var move = 8;
-  var copy = phraseArray;
-  copy.forEach(function (item, index) {
-    if (item.endTime < currentPosition + 100) {
-      var phraseDiv = phraseDivArrayForDelete[index];
+  var deleteArray = [];
+  phraseArray.forEach(function (item, index) {
+    if (item.phrase.endTime < currentPosition + 100) {
+      var phraseDiv = item.phraseDiv;
 
-      if (PhraseDivMoveTimesArray[index] == 0) {
-        var selecter = "#" + phraseIds[index];
+      if (item.moveCount == 0) {
+        var selecter = "#" + item.id;
         var currentHeight = parseInt($(selecter).height());
         phraseDiv.classList.add('fadeLyric');
-        phraseHeightDecrease[index] = currentHeight / 10;
-        phraseMoveForHeight[index] = currentHeight / 2 / 10;
+        item.setHeightChangeSize = currentHeight / 10; //item.setDistanceToMove = ((currentHeight / 2) / 10);
       }
 
       var currentPos = parseInt(phraseDiv.style.top);
 
-      if (PhraseDivMoveTimesArray[index] < 10) {
-        currentPos -= phraseMoveForHeight[index];
+      if (item.moveCount < 10) {
+        currentPos -= item.getHeightChangeSize;
 
-        var _selecter = "#" + phraseIds[index];
+        var _selecter = "#" + item.id;
 
         var _currentHeight = parseInt($(_selecter).height());
 
-        var newHeight = _currentHeight - phraseHeightDecrease[index];
+        var newHeight = _currentHeight - item.getHeightChangeSize;
 
         if (newHeight < 0) {
           newHeight = 0;
@@ -357,19 +353,17 @@ var setDeletePhrase = function setDeletePhrase() {
 
       var newPos = currentPos - move;
       phraseDiv.style.top = newPos + "px";
-      ++PhraseDivMoveTimesArray[index];
+      item.incrementMoveCount();
 
       if (parseInt(phraseDiv.style.top) < -1000) {
         //削除
-        phraseArray.splice(index, 1);
-        phraseDivArrayForDelete.splice(index, 1);
-        PhraseDivMoveTimesArray.splice(index, 1);
-        phraseMoveForHeight.splice(index, 1);
-        phraseIds.splice(index, 1);
-        phraseHeightDecrease.splice(index, 1);
+        deleteArray.push(index);
         phraseDiv.remove();
       }
     }
+  });
+  deleteArray.forEach(function (index) {
+    phraseArray.splice(index, 1);
   });
 };
 
@@ -391,18 +385,49 @@ var reset = function reset() {
   effectCount = 3;
   phraseId = 1;
   phraseDivArray = [];
-  phraseArray = [];
-  phraseDivArrayForDelete = [];
-  PhraseDivMoveTimesArray = [];
-  phraseMoveForHeight = [];
-  phraseHeightDecrease = [];
-  phraseIds = [];
+  phraseArray = []; //phraseDivArrayForDelete = [];
+  //PhraseDivMoveTimesArray = [];
+  //phraseMoveForHeight = [];
+  //phraseHeightDecrease = [];
+  //phraseIds = [];
+
   wordsArray = [];
   wordDivArray = [];
   currentPosition = 0;
   c = null;
   lyricId = 1;
 };
+
+var Phrase = /*#__PURE__*/function () {
+  function Phrase(phrase, id, phraseDiv) {
+    _classCallCheck(this, Phrase);
+
+    this.phrase = phrase;
+    this.id = id;
+    this.phraseDiv = phraseDiv;
+    this.moveCount = 0;
+    this.heightChangeSize = 0;
+  }
+
+  _createClass(Phrase, [{
+    key: "incrementMoveCount",
+    value: function incrementMoveCount() {
+      ++this.moveCount;
+    }
+  }, {
+    key: "getHeightChangeSize",
+    get: function get() {
+      return this.heightChangeSize;
+    }
+  }, {
+    key: "setHeightChangeSize",
+    set: function set(size) {
+      this.heightChangeSize = size;
+    }
+  }]);
+
+  return Phrase;
+}();
 
 window.run = run;
 window.pause = pause;
@@ -435,7 +460,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62153" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51775" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

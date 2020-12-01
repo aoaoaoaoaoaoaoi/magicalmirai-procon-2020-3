@@ -11,11 +11,6 @@ let timer;
 let phraseId = 1;
 let phraseDivArray = [];
 let phraseArray = [];
-let phraseDivArrayForDelete = [];
-let PhraseDivMoveTimesArray = [];
-let phraseMoveForHeight = [];
-let phraseHeightDecrease = [];
-let phraseIds = [];
 
 let wordsArray = [];
 let wordDivArray = [];
@@ -122,18 +117,15 @@ player.addListener({
     let current = c || player.video.firstPhrase;
     while (current && current.startTime < position + 500) {
       if (c !== current) {
-        phraseArray.push(current);
         const phraseDiv = document.createElement("div");
         let currentPhraseId = "phrase_" + phraseId;
         phraseDiv.id = currentPhraseId;
-        phraseIds.push(currentPhraseId);
         phraseDiv.style.position = "relative";
         phraseDiv.style.top = "0px";
         phraseDivArray.push(phraseDiv);
-        phraseDivArrayForDelete.push(phraseDiv);
-        PhraseDivMoveTimesArray.push(0);
-        phraseMoveForHeight.push(0);
-        phraseHeightDecrease.push(0);
+
+        let phrase = new Phrase(current, currentPhraseId, phraseDiv);
+        phraseArray.push(phrase);
         $('#text').append(phraseDiv);
         let words = current.children;
         Array.prototype.push.apply(wordsArray, words);
@@ -195,25 +187,25 @@ const setMakeWords = () => {
 
 const setDeletePhrase = () => {
   let move = 8;
-  let copy = phraseArray;
-  copy.forEach((item, index) => {
-    if(item.endTime < currentPosition + 100){
-      let phraseDiv = phraseDivArrayForDelete[index];
+  let deleteArray = [];
+  phraseArray.forEach((item, index) => {
+    if(item.phrase.endTime < currentPosition + 100){
+      let phraseDiv = item.phraseDiv;
 
-      if(PhraseDivMoveTimesArray[index] == 0){
-        let selecter = "#" + phraseIds[index];
+      if(item.moveCount == 0){
+        let selecter = "#" + item.id;
         let currentHeight = parseInt($(selecter).height());
         phraseDiv.classList.add('fadeLyric');
-        phraseHeightDecrease[index] = currentHeight / 10;
-        phraseMoveForHeight[index] = (currentHeight / 2) / 10;
+        item.setHeightChangeSize =  (currentHeight / 10);
+        //item.setDistanceToMove = ((currentHeight / 2) / 10);
       }
 
       let currentPos = parseInt(phraseDiv.style.top);
-      if(PhraseDivMoveTimesArray[index] < 10){
-        currentPos -= phraseMoveForHeight[index];
-        let selecter = "#" + phraseIds[index];
+      if(item.moveCount < 10){
+        currentPos -= item.getHeightChangeSize;
+        let selecter = "#" + item.id;
         let currentHeight = parseInt($(selecter).height());
-        let newHeight = currentHeight - phraseHeightDecrease[index];
+        let newHeight = currentHeight - item.getHeightChangeSize;
         if(newHeight < 0){
           newHeight = 0;
         }
@@ -221,20 +213,17 @@ const setDeletePhrase = () => {
       }
       let newPos = (currentPos - move);
       phraseDiv.style.top = newPos + "px";
-      
  
-      ++PhraseDivMoveTimesArray[index];
+      item.incrementMoveCount();
       if(parseInt(phraseDiv.style.top) < -1000){
         //削除
-        phraseArray.splice(index, 1);
-        phraseDivArrayForDelete.splice(index, 1);
-        PhraseDivMoveTimesArray.splice(index, 1);
-        phraseMoveForHeight.splice(index, 1);
-        phraseIds.splice(index, 1);
-        phraseHeightDecrease.splice(index, 1);
+        deleteArray.push(index);
         phraseDiv.remove();
       }
     }
+  });
+  deleteArray.forEach((index) => {
+    phraseArray.splice(index, 1);
   });
 };
 
@@ -260,11 +249,11 @@ $("#background-object-effect").addClass("display-none");
  phraseId = 1;
  phraseDivArray = [];
  phraseArray = [];
- phraseDivArrayForDelete = [];
- PhraseDivMoveTimesArray = [];
- phraseMoveForHeight = [];
- phraseHeightDecrease = [];
- phraseIds = [];
+ //phraseDivArrayForDelete = [];
+ //PhraseDivMoveTimesArray = [];
+ //phraseMoveForHeight = [];
+ //phraseHeightDecrease = [];
+ //phraseIds = [];
 
  wordsArray = [];
  wordDivArray = [];
@@ -275,22 +264,24 @@ $("#background-object-effect").addClass("display-none");
 }
 
 class Phrase{
-  constructor (phrase)
+  constructor (phrase, id, phraseDiv)
   {
     this.phrase = phrase;
+    this.id = id;
+    this.phraseDiv = phraseDiv;
+    this.moveCount = 0;
+    this.heightChangeSize = 0;
   }
-  
-  setPhraseDiv (phraseDiv){
-    this.div = phraseDiv;
-  }
+
   incrementMoveCount (){
     ++this.moveCount; 
   }
-  setChangeHeightSize (size){
-    this.changeHeightSize = size;
+
+  get getHeightChangeSize() {
+    return this.heightChangeSize;
   }
-  setMoveDistance (distance){
-    this.moveDistance = distance;
+  set setHeightChangeSize(size) {
+    this.heightChangeSize = size;
   }
 }
 
