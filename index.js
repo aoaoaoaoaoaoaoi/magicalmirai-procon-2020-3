@@ -274,6 +274,26 @@ $("#background-object-effect").addClass("display-none");
  lyricId = 1;
 }
 
+class Phrase{
+  constructor (phrase)
+  {
+    this.phrase = phrase;
+  }
+  
+  setPhraseDiv (phraseDiv){
+    this.div = phraseDiv;
+  }
+  incrementMoveCount (){
+    ++this.moveCount; 
+  }
+  setChangeHeightSize (size){
+    this.changeHeightSize = size;
+  }
+  setMoveDistance (distance){
+    this.moveDistance = distance;
+  }
+}
+
 window.run = run
 window.pause = pause
 window.stop = stop
